@@ -37,3 +37,6 @@ h1 em{white-space:nowrap}
 @media(prefers-reduced-motion:reduce){.photo-loader-mark::before{animation:none}.photo-placeholder,.phase-photo img{transition:none}}
 
 .phase-photo[data-state="ready"] .photo-loader-mark::before,.phase-photo[data-state="error"] .photo-loader-mark::before{animation:none}
+
+/* Reserve scrollbar space as phase explanations change length. */
+.phase-popup{scrollbar-gutter:stable}
