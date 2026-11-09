@@ -274,7 +274,7 @@ function updateControls(){
  const row=document.createElement('span');row.className='row';row.textContent=rosterModel.ids.includes(id)?(front(rosterModel.zones[id])?'ПЕРЕДНЯЯ':'ЗАДНЯЯ'):'ВНЕ ПОЛЯ';
  b.title=r.name;b.setAttribute('aria-label',r.name);b.append(sw,title,row);b.onclick=()=>selectPlayer(id,state.rosterTeam);const team=state.rosterTeam;const on=()=>{hoverPlayer={id,team};render();},off=()=>{if(hoverPlayer&&hoverPlayer.id===id){hoverPlayer=null;render();}};b.addEventListener('mouseenter',on);b.addEventListener('mouseleave',off);b.addEventListener('focus',on);b.addEventListener('blur',off);$('roster').append(b);
  }
- $('phaseButtons').replaceChildren();frames.forEach((f,i)=>{if(i===frames.length-1||i===1)return;const b=document.createElement('button');b.textContent=window.volleyTypography(f.title);b.dataset.t=f.t;b.onclick=()=>{pause();seek((state.auto?Math.min(11,Math.floor(state.cycleTime/20))*20:0)+f.t);};$('phaseButtons').append(b);});
+ $('phaseButtons').replaceChildren();frames.forEach((f,i)=>{const b=document.createElement('button');b.textContent=window.volleyTypography(f.title);b.dataset.t=f.t;b.onclick=()=>{pause();setPhasePicker(false);seek((state.auto?Math.min(11,Math.floor(state.cycleTime/20))*20:0)+f.t);};$('phaseButtons').append(b);});
  const labels=$('timelineLabels');labels.replaceChildren();labels.classList.toggle('full-cycle',state.auto);
  const names=state.auto?Array.from({length:6},(_,i)=>'Р'+((cycleStart.rotation+i)%6+1)+' · '+formatTime(i*40)):(state.mode==='receive'?['Расстановка','Наша атака','Защита','Контратака']:['Подача','Защита','Наша атака','Соперник']);
  names.forEach((name,i)=>{const n=document.createElement('span');n.textContent=name;n.dataset.chapter=i;labels.append(n);});
@@ -361,7 +361,7 @@ function render(){
  }
  $('previousPhase').disabled=!state.auto&&state.time===0;
  $('nextPhase').disabled=!state.auto&&state.time>=20;
- document.querySelectorAll('#phaseButtons button').forEach(n=>n.classList.toggle('active',Number(n.dataset.t)===a.t));
+ document.querySelectorAll('#phaseButtons button').forEach(n=>{const active=Number(n.dataset.t)===a.t;n.classList.toggle('active',active);n.setAttribute('aria-current',active?'step':'false');});
 }
 function tick(now){if(!last)last=now;const dt=Math.min((now-last)/1000,.1);last=now;if(state.playing){if(state.auto)seek((state.cycleTime+dt*state.speed)%cycleDuration);else{state.time=Math.min(rallyDuration,state.time+dt*state.speed);if(state.time>=rallyDuration)pause();render();}}else if(blend||hoverPlayer)render();requestAnimationFrame(tick);}
 $('play').onclick=toggle;$('reset').onclick=()=>{pause();seek(0);};$('timeline').oninput=e=>{pause();seek(+e.target.value);};$('speed').onchange=e=>state.speed=+e.target.value;
@@ -450,6 +450,17 @@ function stepPhase(direction){
  else if(state.auto)seek(base+20>=cycleDuration?0:base+20);
 }
 $('previousPhase').onclick=()=>stepPhase(-1);$('nextPhase').onclick=()=>stepPhase(1);
+function setPhasePicker(open){
+ $('phasePopup').classList.toggle('choosing-phase',open);
+ $('phasePicker').hidden=!open;
+ $('showPhasePicker').setAttribute('aria-expanded',String(open));
+ if(open)($('phaseButtons').querySelector('.active')||$('phaseButtons').querySelector('button')||$('closePhasePicker')).focus();
+ else $('showPhasePicker').focus();
+}
+$('showPhasePicker').onclick=()=>{pause();setPhasePicker(true);};
+$('closePhasePicker').onclick=()=>setPhasePicker(false);
+$('phasePicker').addEventListener('keydown',e=>{if(e.key==='Escape'){e.preventDefault();setPhasePicker(false);}});
+
 /* Photos for phases: list files in photos/photos.js. */
 const phasePhotos=[[/^Повторная передача$/,'repeatSet'],[/^Соперник выходит в защиту$/,'opponentDefense'],[/^Контратака$/,'counterattack'],[/^Соперник готовит атаку$/,'opponentPrepare'],[/До подачи/,'ready'],[/^Приём$/,'receive'],[/подач|Сбор у сетки/i,'serve'],[/Касание|Приём соперника/,'dig'],[/передача/i,'set'],[/Блок|защит|готовит/i,'block'],[/Страховка/,'cover'],[/атак/i,'attack'],[/Очко/,'point']];
 const phasePhotoCache=new Map();

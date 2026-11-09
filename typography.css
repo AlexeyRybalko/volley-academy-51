@@ -50,8 +50,23 @@ h1 em{white-space:nowrap}
 .phase-content::-webkit-scrollbar{display:none;width:0;height:0}
 .phase-footer{position:relative;flex:none;padding-top:14px;background:#f4f1ea}
 .phase-popup .phase-nav{margin-top:0}
-.phase-footer .phase-list .phase-buttons{position:absolute;z-index:3;bottom:calc(100% + 6px);left:0;right:0;max-height:min(240px,40dvh);overflow:auto;scrollbar-width:none;margin:0;padding:12px;background:#f4f1ea;border:1px solid #d4cfc4;border-radius:8px;box-shadow:0 -8px 24px #0002}
-.phase-footer .phase-list .phase-buttons::-webkit-scrollbar{display:none}
 @media(max-width:860px){
  .workspace>.phase-popup{display:flex;height:min(800px,calc(100dvh - 32px));min-height:360px;overflow:hidden}
 }
+
+/* The phase picker replaces the card body instead of opening a scrolling menu. */
+.all-phases-button{display:flex;align-items:center;justify-content:space-between;gap:10px;width:100%;min-height:42px;margin-top:12px;padding:10px 12px;border:1px solid #9d9587;border-radius:7px;background:#e7e0d3;color:#292d34;font-family:var(--text);font-size:13px;font-weight:600;line-height:1.3;text-align:left;cursor:pointer;transition:background .15s,border-color .15s}
+.all-phases-button:hover{background:#dcd2c0;border-color:#6a6257}
+.all-phases-button:active{background:#d2c6b0}
+.all-phases-button:focus-visible{outline:3px solid var(--red);outline-offset:2px}
+.all-phases-button svg{flex:none}
+.phase-popup.choosing-phase>.explanation-heading,.phase-popup.choosing-phase>.phase-body{display:none}
+.phase-picker[hidden]{display:none!important}
+.phase-picker{display:flex;flex-direction:column;flex:1;min-height:0;gap:10px;padding-top:8px}
+.phase-picker h2{flex:none;margin:4px 0 2px;font-size:24px}
+.phase-picker .phase-buttons{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:repeat(7,minmax(0,1fr));flex:1;min-height:0;gap:6px;margin:0}
+.phase-picker .phase-buttons button{min-width:0;min-height:0;padding:6px 7px;border:1px solid #bcb4a5;border-radius:6px;background:#fffdfa;color:#292d34;font-family:var(--text);font-size:12px;font-weight:600;line-height:1.2;text-align:left;text-wrap:balance;overflow-wrap:normal}
+.phase-picker .phase-buttons button:hover{background:#e7dfd1;border-color:#7b7162}
+.phase-picker .phase-buttons button.active{background:#292d34;border-color:#292d34;color:#fff}
+.phase-picker .all-phases-button{flex:none;margin-top:0}
+@media(max-width:860px){.phase-picker .phase-buttons button{font-size:13px;padding:8px}.phase-picker{gap:12px}}
