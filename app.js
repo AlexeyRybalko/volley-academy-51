@@ -356,7 +356,7 @@ function render(){
  for(const chapter of $('timelineLabels').children)chapter.classList.toggle('current',state.auto&&Number(chapter.dataset.chapter)===Math.min(5,Math.floor(state.cycleTime/40)));
  const phaseKey=state.rotation+':'+state.mode+':'+index;
  if(phaseKey!==lastPhaseKey){touchRipple(a);
- lastPhaseKey=phaseKey;showPhasePhoto(a.title);
+ lastPhaseKey=phaseKey;showPhasePhoto(a.title,frames[index+1]?.title);
  animatePhaseCard();
  }
  $('previousPhase').disabled=!state.auto&&state.time===0;
@@ -453,10 +453,22 @@ function stepPhase(direction){
 $('previousPhase').onclick=()=>stepPhase(-1);$('nextPhase').onclick=()=>stepPhase(1);
 /* Photos for phases: list files in photos/photos.js. */
 const phasePhotos=[[/^Повторная передача$/,'repeatSet'],[/^Соперник выходит в защиту$/,'opponentDefense'],[/^Контратака$/,'counterattack'],[/^Соперник готовит атаку$/,'opponentPrepare'],[/До подачи/,'ready'],[/^Приём$/,'receive'],[/подач|Сбор у сетки/i,'serve'],[/Касание|Приём соперника/,'dig'],[/передача/i,'set'],[/Блок|защит|готовит/i,'block'],[/Страховка/,'cover'],[/атак/i,'attack'],[/Очко/,'point']];
-function showPhasePhoto(title){
+const phasePhotoCache=new Map();
+function phasePhotoEntry(title){
+ const match=phasePhotos.find(([re])=>re.test(title||''));
+ return match&&(window.academyPhotos||{})[match[1]];
+}
+function warmPhasePhoto(title){
+ if(!title||navigator.connection?.saveData)return;
+ const entry=phasePhotoEntry(title),file=typeof entry==='string'?entry:entry?.file;
+ if(!file||phasePhotoCache.has(file))return;
+ const preload=new Image();preload.decoding='async';preload.fetchPriority='low';
+ phasePhotoCache.set(file,preload);preload.onerror=()=>phasePhotoCache.delete(file);
+ preload.src='photos/'+file;
+}
+function showPhasePhoto(title,nextTitle){
  const fig=$('phasePhoto'),img=$('phasePhotoImg');if(!fig||!img)return;
- const match=phasePhotos.find(([re])=>re.test(title)),name=match?match[1]:null;
- const entry=name&&(window.academyPhotos||{})[name],file=typeof entry==='string'?entry:entry&&entry.file;
+ const entry=phasePhotoEntry(title),file=typeof entry==='string'?entry:entry&&entry.file;
  if(!file){fig.hidden=true;return;}
  const src='photos/'+file,cap=$('phasePhotoCredit');
  img.style.objectPosition=entry.position||'50% 50%';img.alt=entry.alt||title;
@@ -464,9 +476,9 @@ function showPhasePhoto(title){
  if(cap)cap.hidden=!entry.credit;
  if(cap){cap.replaceChildren();if(entry.credit){const l=document.createElement(entry.source?'a':'span');l.textContent='Фото: '+entry.credit;if(entry.source){l.href=entry.source;l.target='_blank';l.rel='noreferrer';}cap.append(l);}}
  img.title=entry&&entry.credit?'Фото: '+entry.credit:'';
- if(img.dataset.src===src){fig.hidden=img.dataset.ok!=='1';return;}
+ if(img.dataset.src===src){fig.hidden=img.dataset.ok!=='1';warmPhasePhoto(nextTitle);return;}
  img.dataset.src=src;img.dataset.ok='0';fig.hidden=true;
- img.onload=()=>{img.dataset.ok='1';fig.hidden=false;};img.onerror=()=>{img.dataset.ok='0';fig.hidden=true;};
+ img.onload=()=>{img.dataset.ok='1';fig.hidden=false;warmPhasePhoto(nextTitle);};img.onerror=()=>{img.dataset.ok='0';fig.hidden=true;};
  img.src=src;
 }
 /* Role names in text get a small dot in that role's colour. */

@@ -18,8 +18,14 @@ for(const name of siteFiles){
  if(name.endsWith('.html'))for(const match of text.matchAll(/(?:src|href)=["']([^"']+)["']/g))checkReference(match[1],file);
  if(name.endsWith('.css'))for(const match of text.matchAll(/url\(\s*["']?([^"')]+)["']?\s*\)/g))checkReference(match[1],file);
 }
-for(const photo of ['serve','receive','set','attack','cover','block','dig','point']){
- if(!fs.existsSync(path.join(root,'photos',photo+'.jpg')))failures.push('Missing phase photo: '+photo);
-}
+const photoContext={window:{}};
+try{
+ vm.runInNewContext(fs.readFileSync(path.join(root,'photos/photos.js'),'utf8'),photoContext);
+ for(const entry of Object.values(photoContext.window.academyPhotos||{})){
+  const file=typeof entry==='string'?entry:entry.file;
+  checkReference('photos/'+file,path.join(root,'index.html'));
+ }
+}catch(error){failures.push('Invalid photo manifest: '+error.message);}
+const photoCount=Object.keys(photoContext.window.academyPhotos||{}).length;
 if(failures.length){console.error(failures.join('\n'));process.exit(1);}
-console.log(`Validated ${siteFiles.length} HTML/CSS/JS files, their local assets, and 8 phase photos.`);
+console.log(`Validated ${siteFiles.length} HTML/CSS/JS files, their local assets, and ${photoCount} phase photos.`);
