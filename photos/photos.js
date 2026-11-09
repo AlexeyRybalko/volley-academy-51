@@ -1,6 +1,7 @@
 /* Photos from Academy training and games. Position chooses the action in a square crop.
    Originals remain in the user's Фото folder; no credit overlay is needed. */
 window.academyPhotos = {
+  repeatSet: {file:'repeat-set.jpg', position:'50% 45%', alt:'Связующий выполняет повторную передачу после защиты'},
   opponentDefense: {file:'opponent-defense.jpg', position:'50% 65%', alt:'Игрок соперника занимает стойку в защите'},
   counterattack: {file:'counterattack.jpg', position:'50% 15%', ratio:'4 / 5', alt:'Атакующий удар в прыжке при контратаке'},
   opponentPrepare: {file:'opponent-attack.jpg', position:'50% 35%', alt:'Соперник готовит атакующий удар у сетки'},
