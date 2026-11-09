@@ -90,7 +90,7 @@ function build(){
  const digText='Мяч поднят — связующий снова выходит к сетке, нападающие отходят для разбега. Если связующий был в задней линии, то и у сетки он остаётся игроком задней линии.';
  if(state.mode==='receive')frames=[
  frame(0,m.initial,[7,-2.35],'До подачи',startText),
- frame(1,m.initial,[7,-2.35],'Удар по подаче','Соперник подал — теперь можно уходить со стартовых мест. Пунктир показывает, куда игрок побежит дальше.'),
+ frame(1,m.initial,[7,-2.35],'Подача','Соперник подал — теперь можно уходить со стартовых мест. Пунктир показывает, куда игрок побежит дальше.'),
  frame(3,m.firstReceiving,m.firstReceiving[m.receiver],'Приём',passText),
  frame(5,m.firstSetup,m.firstSetup.s,'Передача',setText+(m.shortFirst?' На первом мяче слева атакует диагональный, справа — доигровщик.':'')),
  frame(7,m.firstAttack,m.firstAttack[m.firstAttacker],'Первая атака',m.shortFirst&&state.attack!==3?'Первый мяч: '+roles[m.firstAttacker].name.toLowerCase()+' атакует '+(state.attack===4?'из зоны 4 слева':'из зоны 2 справа')+'. После этой атаки крайние меняются и дальше играют на своих обычных сторонах.':attackText),
