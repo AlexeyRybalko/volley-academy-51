@@ -1,6 +1,7 @@
 /* Photos from Academy training and games. Position chooses the action in a square crop.
    Originals remain in the user's Фото folder; no credit overlay is needed. */
 window.academyPhotos = {
+  counterattack: {file:'counterattack.jpg', position:'50% 15%', ratio:'4 / 5', alt:'Атакующий удар в прыжке при контратаке'},
   opponentPrepare: {file:'opponent-attack.jpg', position:'50% 35%', alt:'Соперник готовит атакующий удар у сетки'},
   ready: {file:'ready.jpg', position:'50% 65%', alt:'Игрок в стойке готовится к подаче соперника'},
   receive: {file:'receive.jpg', position:'50% 0%', ratio:'4 / 5', alt:'Приём мяча снизу на тренировке'},
