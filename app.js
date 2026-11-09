@@ -462,7 +462,7 @@ async function animatePhaseView(elements,enter){
 async function setPhasePicker(open,onReveal){
  if(phasePickerBusy)return;
  phasePickerBusy=true;
- const popup=$('phasePopup'),picker=$('phasePicker'),card=[popup.querySelector('.explanation-heading'),popup.querySelector('.phase-body')];
+ const popup=$('phasePopup'),picker=$('phasePicker'),card=[$('phaseContent'),popup.querySelector('.phase-nav')];
  popup.setAttribute('aria-busy','true');
  try{
   await animatePhaseView(open?card:[picker],false);
@@ -470,13 +470,13 @@ async function setPhasePicker(open,onReveal){
   popup.classList.toggle('choosing-phase',open);
   picker.hidden=!open;
   $('showPhasePicker').setAttribute('aria-expanded',String(open));
+  $('showPhasePicker').querySelector('span').textContent=open?'Свернуть список фаз':'Все фазы розыгрыша';
   await animatePhaseView(open?[picker]:card,true);
-  if(open)($('phaseButtons').querySelector('.active')||$('phaseButtons').querySelector('button')||$('closePhasePicker')).focus();
+  if(open)($('phaseButtons').querySelector('.active')||$('phaseButtons').querySelector('button')||$('showPhasePicker')).focus();
   else $('showPhasePicker').focus();
  }finally{phasePickerBusy=false;popup.setAttribute('aria-busy','false');}
 }
-$('showPhasePicker').onclick=()=>{pause();setPhasePicker(true);};
-$('closePhasePicker').onclick=()=>setPhasePicker(false);
+$('showPhasePicker').onclick=()=>{pause();setPhasePicker(!$('phasePopup').classList.contains('choosing-phase'));};
 $('phasePicker').addEventListener('keydown',e=>{if(e.key==='Escape'){e.preventDefault();setPhasePicker(false);}});
 
 /* Photos for phases: list files in photos/photos.js. */

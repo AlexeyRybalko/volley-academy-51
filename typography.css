@@ -60,7 +60,7 @@ h1 em{white-space:nowrap}
 .all-phases-button:active{background:#d2c6b0}
 .all-phases-button:focus-visible{outline:3px solid var(--red);outline-offset:2px}
 .all-phases-button svg{flex:none}
-.phase-popup.choosing-phase>.explanation-heading,.phase-popup.choosing-phase>.phase-body{display:none}
+.phase-popup.choosing-phase .phase-content,.phase-popup.choosing-phase .phase-nav{display:none}
 .phase-picker[hidden]{display:none!important}
 .phase-picker{display:flex;flex-direction:column;flex:1;min-height:0;gap:10px;padding-top:8px}
 .phase-picker h2{flex:none;margin:4px 0 2px;font-size:24px}
@@ -72,3 +72,17 @@ h1 em{white-space:nowrap}
 @media(max-width:860px){.phase-picker .phase-buttons button{font-size:13px;padding:8px}.phase-picker{gap:12px}}
 
 .phase-step-number{flex:0 0 20px;font-variant-numeric:tabular-nums;opacity:.55;font-size:11px}
+
+/* Keep the photo visible; only the lower explanation changes into a compact list. */
+.phase-media{display:flex;justify-content:center;flex:0 0 32%;min-height:0;margin-bottom:10px;overflow:hidden}
+.phase-media .phase-photo{float:none;width:auto;height:100%;max-width:100%;max-height:none;aspect-ratio:4/5;margin:0;flex:none}
+.phase-picker{padding-top:0;max-height:280px;gap:0}
+.phase-picker .phase-buttons{grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:repeat(7,minmax(0,1fr));gap:4px}
+.phase-picker .phase-buttons button{padding:2px 6px;font-size:13px;line-height:1.1}
+.phase-footer{margin-top:auto;padding-top:10px}
+.choosing-phase .all-phases-button{margin-top:0}
+@media(max-height:1000px) and (min-width:861px){
+ .phase-media{flex-basis:26%}
+ .phase-picker .phase-buttons button{font-size:13px;line-height:1.1;padding:2px 6px;gap:4px}
+ .phase-picker .phase-step-number{display:none}
+}
