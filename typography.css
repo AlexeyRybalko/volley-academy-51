@@ -14,11 +14,26 @@ h1 em{white-space:nowrap}
  .quiz-actions button{max-width:100%;white-space:normal}
 }
 
-/* Portrait originals: square framing keeps the action larger than a wide strip. */
-.phase-photo{aspect-ratio:1;max-height:none}
+/* A consistent portrait frame reserves space before any image arrives. */
+.phase-photo{aspect-ratio:4/5;max-height:none}
 .phase-photo img{object-fit:cover}
 .phase-photo figcaption[hidden]{display:none}
-@media(max-height:1000px) and (min-width:861px){.phase-photo{aspect-ratio:1}}
+@media(max-height:1000px) and (min-width:861px){.phase-photo{aspect-ratio:4/5}}
 @media(max-width:860px){
- .phase-popup .phase-photo{width:100%;max-width:280px;max-height:none;aspect-ratio:1;margin:0 auto 14px}
+ .phase-popup .phase-photo{width:100%;max-width:280px;max-height:none;aspect-ratio:4/5;margin:0 auto 14px}
 }
+
+/* Images never participate in sizing: pending, loaded and failed use one frame. */
+.phase-photo img{position:absolute;inset:0;width:100%;height:100%;opacity:0;transition:opacity .22s ease}
+.phase-photo[data-state="ready"] img{opacity:1}
+.photo-placeholder{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:17px;background:linear-gradient(135deg,#e7e1d6,#f0ebe2);color:#6b625b;opacity:1;transition:opacity .22s ease}
+.phase-photo[data-state="ready"] .photo-placeholder{opacity:0;visibility:hidden}
+.photo-loader-mark{position:relative;display:block;width:36px;height:36px}
+.photo-loader-mark svg{display:block;width:100%;height:100%;opacity:.85}
+.photo-loader-mark::before{content:"";position:absolute;inset:-7px;border:2px solid #c4474d26;border-top-color:var(--red);border-radius:50%;animation:photo-loading-turn 1.2s linear infinite}
+.photo-loading-label{font-family:var(--text);font-size:12px;line-height:1.4;letter-spacing:0;text-align:center;padding:0 10px}
+.phase-photo[data-state="error"] .photo-loader-mark{display:none}
+@keyframes photo-loading-turn{to{transform:rotate(360deg)}}
+@media(prefers-reduced-motion:reduce){.photo-loader-mark::before{animation:none}.photo-placeholder,.phase-photo img{transition:none}}
+
+.phase-photo[data-state="ready"] .photo-loader-mark::before,.phase-photo[data-state="error"] .photo-loader-mark::before{animation:none}

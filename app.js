@@ -469,17 +469,21 @@ function warmPhasePhoto(title){
 function showPhasePhoto(title,nextTitle){
  const fig=$('phasePhoto'),img=$('phasePhotoImg');if(!fig||!img)return;
  const entry=phasePhotoEntry(title),file=typeof entry==='string'?entry:entry&&entry.file;
- if(!file){fig.hidden=true;return;}
+ fig.hidden=false;
+ const status=fig.querySelector('.photo-loading-label');
+ const setPhotoState=value=>{fig.dataset.state=value;fig.setAttribute('aria-busy',String(value==='loading'));if(status)status.textContent=value==='error'?'Фото недоступно':'Загружаем фото';};
+ if(!file){setPhotoState('error');return;}
  const src='photos/'+file,cap=$('phasePhotoCredit');
  img.style.objectPosition=entry.position||'50% 50%';img.alt=entry.alt||title;
- fig.style.aspectRatio=entry.ratio||'1';
  if(cap)cap.hidden=!entry.credit;
  if(cap){cap.replaceChildren();if(entry.credit){const l=document.createElement(entry.source?'a':'span');l.textContent='Фото: '+entry.credit;if(entry.source){l.href=entry.source;l.target='_blank';l.rel='noreferrer';}cap.append(l);}}
  img.title=entry&&entry.credit?'Фото: '+entry.credit:'';
- if(img.dataset.src===src){fig.hidden=img.dataset.ok!=='1';warmPhasePhoto(nextTitle);return;}
- img.dataset.src=src;img.dataset.ok='0';fig.hidden=true;
- img.onload=()=>{img.dataset.ok='1';fig.hidden=false;warmPhasePhoto(nextTitle);};img.onerror=()=>{img.dataset.ok='0';fig.hidden=true;};
+ if(img.dataset.src===src){setPhotoState(img.dataset.ok==='1'?'ready':img.dataset.ok==='error'?'error':'loading');warmPhasePhoto(nextTitle);return;}
+ img.dataset.src=src;img.dataset.ok='0';setPhotoState('loading');
+ const ready=()=>{if(img.dataset.src!==src)return;img.dataset.ok='1';setPhotoState('ready');warmPhasePhoto(nextTitle);};
+ img.onload=ready;img.onerror=()=>{if(img.dataset.src!==src)return;img.dataset.ok='error';setPhotoState('error');};
  img.src=src;
+ if(img.complete&&img.naturalWidth>0)ready();
 }
 /* Role names in text get a small dot in that role's colour. */
 const roleWords=[[/^связующ/i,'s'],[/^диагональн/i,'o'],[/^доигровщик/i,'h1'],[/^центральн/i,'m1'],[/^либеро/i,'l']];
