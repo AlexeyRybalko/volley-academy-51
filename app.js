@@ -452,7 +452,7 @@ function stepPhase(direction){
 }
 $('previousPhase').onclick=()=>stepPhase(-1);$('nextPhase').onclick=()=>stepPhase(1);
 /* Photos for phases: list files in photos/photos.js. */
-const phasePhotos=[[/^Приём$|До подачи/,'receive'],[/подач|Сбор у сетки/,'serve'],[/Касание|Приём соперника/,'dig'],[/передача/i,'set'],[/Блок|защит|готовит/i,'block'],[/Страховка/,'cover'],[/атак/i,'attack'],[/Очко/,'point']];
+const phasePhotos=[[/До подачи/,'ready'],[/^Приём$/,'receive'],[/подач|Сбор у сетки/,'serve'],[/Касание|Приём соперника/,'dig'],[/передача/i,'set'],[/Блок|защит|готовит/i,'block'],[/Страховка/,'cover'],[/атак/i,'attack'],[/Очко/,'point']];
 function showPhasePhoto(title){
  const fig=$('phasePhoto'),img=$('phasePhotoImg');if(!fig||!img)return;
  const match=phasePhotos.find(([re])=>re.test(title)),name=match?match[1]:null;

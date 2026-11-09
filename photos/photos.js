@@ -1,6 +1,7 @@
 /* Photos from Academy training and games. Position chooses the action in a square crop.
    Originals remain in the user's Фото folder; no credit overlay is needed. */
 window.academyPhotos = {
+  ready: {file:'ready.jpg', position:'50% 65%', alt:'Игрок в стойке готовится к подаче соперника'},
   receive: {file:'receive.jpg', position:'50% 0%', ratio:'4 / 5', alt:'Приём мяча снизу на тренировке'},
   serve: {file:'serve.jpg', position:'50% 53%', alt:'Игрок готовится выполнить подачу'},
   set: {file:'set.jpg', position:'50% 20%', alt:'Передача мяча двумя руками сверху'},
