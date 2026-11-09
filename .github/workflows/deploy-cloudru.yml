@@ -1,0 +1,51 @@
+name: Publish Volleyball Academy
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: volleyball-cloudru-production
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Validate JavaScript and local assets
+        run: node scripts/validate-site.mjs
+
+  deploy:
+    needs: validate
+    if: ${{ vars.CLOUDRU_BUCKET != '' }}
+    runs-on: ubuntu-latest
+    environment:
+      name: cloudru-production
+      url: ${{ vars.CLOUDRU_SITE_URL || format('https://{0}.s3-website.cloud.ru', vars.CLOUDRU_BUCKET) }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Prepare public files
+        run: |
+          mkdir _site
+          cp ./*.html ./*.css ./*.js ./*.png _site/
+          cp -R photos _site/photos
+      - name: Upload to Cloud.ru Object Storage
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.CLOUDRU_TENANT_ID }}:${{ secrets.CLOUDRU_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.CLOUDRU_KEY_SECRET }}
+          AWS_DEFAULT_REGION: ru-central-1
+          CLOUDRU_BUCKET: ${{ vars.CLOUDRU_BUCKET }}
+        run: |
+          aws s3 sync _site "s3://$CLOUDRU_BUCKET" --endpoint-url https://s3.cloud.ru --no-progress --cache-control "no-cache"
+      - name: Verify published site
+        env:
+          SITE_URL: ${{ vars.CLOUDRU_SITE_URL || format('https://{0}.s3-website.cloud.ru', vars.CLOUDRU_BUCKET) }}
+        run: curl --fail --silent --show-error --retry 5 --retry-delay 3 --retry-all-errors "$SITE_URL/" --output /dev/null

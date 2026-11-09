@@ -1,0 +1,9 @@
+work/
+backups/
+node_modules/
+.env
+.env.*
+.aws/
+*.zip
+Thumbs.db
+.DS_Store
