@@ -344,7 +344,7 @@ function render(){
  }
  }
  const bp=interpolate(a.b,b.b,u),[bx,by]=xy(bp);node('ellipse',{cx:bx+3,cy:by+16,rx:13,ry:5,fill:'#0b1220',opacity:.35},$('ball'));node('circle',{cx:bx,cy:by,r:21,class:'ball-halo'},$('ball'));node('use',{href:'#vball',x:bx-16,y:by-16,width:32,height:32,class:'ball-icon'},$('ball'));
- $('timeline').value=state.auto?state.cycleTime:state.time;$('timeLabel').textContent=formatTime(state.auto?state.cycleTime:state.time)+' / '+formatTime(state.auto?cycleDuration:rallyDuration);$('phaseTitle').textContent=(state.auto?'Р'+(state.rotation+1)+' · ':'')+a.title;$('explainTitle').textContent=a.title;setRoleText($('explainText'),a.explain);
+ $('timeline').value=state.auto?state.cycleTime:state.time;$('timeline').style.setProperty?.('--progress',(100*Number($('timeline').value)/Number($('timeline').max||20))+'%');$('timeLabel').textContent=formatTime(state.auto?state.cycleTime:state.time)+' / '+formatTime(state.auto?cycleDuration:rallyDuration);$('phaseTitle').textContent=(state.auto?'Р'+(state.rotation+1)+' · ':'')+a.title;$('explainTitle').textContent=a.title;setRoleText($('explainText'),a.explain);
  let info='';if(state.selected){const id=state.selected,r=roles[id],tm=state.selectedTeam==='away'?opponent:model,prefix=state.selectedTeam==='away'?'Соперник · ':'Наша команда · ';if(!tm.ids.includes(id))info=prefix+r.name+': вне площадки. '+(id==='l'?'Центральный сейчас подаёт сам, либеро выйдет вместо него на следующем приёме.':'На задней линии вместо него играет либеро.');else info=prefix+r.name+' · зона '+tm.zones[id]+' · '+(front(tm.zones[id])?'передняя':'задняя')+' линия. '+(id==='s'?'Выходит на вторую передачу.':id==='l'?'Приём, защита и страховка.':id===tm.attacker?'Завершает атаку этой команды.':front(tm.zones[id])?'Атака, блок и страховка.':'Приём, защита и страховка.');}
  const selectedJob=(!a.cone||state.time<=a.cone.end+1e-8)?(state.selectedTeam==='home'?a.homeJobs:a.awayJobs)?.[state.selected]:null;
  if(selectedJob)info+=' Задача в защите: '+selectedJob.toLowerCase()+'.';
@@ -388,6 +388,7 @@ if(typeof window!=='undefined'){
  fitWorkspace();
 }
 function drawLayout(){
+ if(window.matchMedia?.('(max-width: 860px)').matches)state.orientation='vertical';
  const vertical=state.orientation==='vertical',g=$('courtBase');g.replaceChildren();
  $('court').setAttribute('viewBox',vertical?'0 600 820 860':'0 0 1440 820');
  $('court').setAttribute('aria-label',vertical?'Наша половина площадки крупно: сетка сверху, команда снизу.':'Полная площадка: наша команда справа, соперник слева.');
