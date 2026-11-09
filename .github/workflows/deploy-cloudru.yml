@@ -37,6 +37,13 @@ jobs:
           mkdir _site
           cp ./*.html ./*.css ./*.js ./*.png _site/
           cp -R photos _site/photos
+      - name: Configure website and public read-only access
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.CLOUDRU_TENANT_ID }}:${{ secrets.CLOUDRU_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.CLOUDRU_KEY_SECRET }}
+          AWS_DEFAULT_REGION: ru-central-1
+          CLOUDRU_BUCKET: ${{ vars.CLOUDRU_BUCKET }}
+        run: python3 scripts/configure-cloudru.py
       - name: Upload to Cloud.ru Object Storage
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.CLOUDRU_TENANT_ID }}:${{ secrets.CLOUDRU_KEY_ID }}

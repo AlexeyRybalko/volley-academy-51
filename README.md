@@ -17,7 +17,8 @@ GitHub Actions проверяет сайт при каждом push в `main`. �
 
 - Repository variable `CLOUDRU_BUCKET`: имя отдельного бакета для этого сайта.
 - Repository secrets: `CLOUDRU_TENANT_ID`, `CLOUDRU_KEY_ID`, `CLOUDRU_KEY_SECRET`.
-- В Cloud.ru для бакета должны быть настроены публичное чтение, доменное имя и хостинг с главной страницей `index.html`.
+- В Cloud.ru нужно создать отдельный бакет с доменным именем. Workflow настраивает главную страницу `index.html` и публичное чтение объектов. Публичная запись и просмотр списка файлов не включаются.
+- Для сервисного аккаунта нужны `s3e.viewer`, `s3e.editor`, `s3e.editor-acl` на этот бакет.
 - Необязательная variable `CLOUDRU_SITE_URL`: полный адрес сайта, если домен отличается от имени бакета.
 
 После настройки повторно запустите workflow **Publish Volleyball Academy**.
