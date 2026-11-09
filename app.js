@@ -274,7 +274,7 @@ function updateControls(){
  const row=document.createElement('span');row.className='row';row.textContent=rosterModel.ids.includes(id)?(front(rosterModel.zones[id])?'ПЕРЕДНЯЯ':'ЗАДНЯЯ'):'ВНЕ ПОЛЯ';
  b.title=r.name;b.setAttribute('aria-label',r.name);b.append(sw,title,row);b.onclick=()=>selectPlayer(id,state.rosterTeam);const team=state.rosterTeam;const on=()=>{hoverPlayer={id,team};render();},off=()=>{if(hoverPlayer&&hoverPlayer.id===id){hoverPlayer=null;render();}};b.addEventListener('mouseenter',on);b.addEventListener('mouseleave',off);b.addEventListener('focus',on);b.addEventListener('blur',off);$('roster').append(b);
  }
- $('phaseButtons').replaceChildren();frames.forEach((f,i)=>{if(i===frames.length-1||i===1)return;const b=document.createElement('button');b.textContent=f.title;b.dataset.t=f.t;b.onclick=()=>{pause();seek((state.auto?Math.min(11,Math.floor(state.cycleTime/20))*20:0)+f.t);};$('phaseButtons').append(b);});
+ $('phaseButtons').replaceChildren();frames.forEach((f,i)=>{if(i===frames.length-1||i===1)return;const b=document.createElement('button');b.textContent=window.volleyTypography(f.title);b.dataset.t=f.t;b.onclick=()=>{pause();seek((state.auto?Math.min(11,Math.floor(state.cycleTime/20))*20:0)+f.t);};$('phaseButtons').append(b);});
  const labels=$('timelineLabels');labels.replaceChildren();labels.classList.toggle('full-cycle',state.auto);
  const names=state.auto?Array.from({length:6},(_,i)=>'Р'+((cycleStart.rotation+i)%6+1)+' · '+formatTime(i*40)):(state.mode==='receive'?['Расстановка','Наша атака','Защита','Контратака']:['Подача','Защита','Наша атака','Соперник']);
  names.forEach((name,i)=>{const n=document.createElement('span');n.textContent=name;n.dataset.chapter=i;labels.append(n);});
@@ -346,7 +346,7 @@ function render(){
  }
  }
  const bp=interpolate(a.b,b.b,u),[bx,by]=xy(bp);node('ellipse',{cx:bx+3,cy:by+16,rx:13,ry:5,fill:'#0b1220',opacity:.35},$('ball'));node('circle',{cx:bx,cy:by,r:21,class:'ball-halo'},$('ball'));node('use',{href:'#vball',x:bx-16,y:by-16,width:32,height:32,class:'ball-icon'},$('ball'));
- $('timeline').value=state.auto?state.cycleTime:state.time;$('timeline').style.setProperty?.('--progress',(100*Number($('timeline').value)/Number($('timeline').max||20))+'%');$('timeLabel').textContent=formatTime(state.auto?state.cycleTime:state.time)+' / '+formatTime(state.auto?cycleDuration:rallyDuration);$('phaseTitle').textContent=(state.auto?'Р'+(state.rotation+1)+' · ':'')+a.title;$('explainTitle').textContent=a.title;setRoleText($('explainText'),a.explain);
+ $('timeline').value=state.auto?state.cycleTime:state.time;$('timeline').style.setProperty?.('--progress',(100*Number($('timeline').value)/Number($('timeline').max||20))+'%');$('timeLabel').textContent=formatTime(state.auto?state.cycleTime:state.time)+' / '+formatTime(state.auto?cycleDuration:rallyDuration);$('phaseTitle').textContent=window.volleyTypography((state.auto?'Р'+(state.rotation+1)+' · ':'')+a.title);$('explainTitle').textContent=window.volleyTypography(a.title);setRoleText($('explainText'),a.explain);
  let info='';if(state.selected){const id=state.selected,r=roles[id],tm=state.selectedTeam==='away'?opponent:model,prefix=state.selectedTeam==='away'?'Соперник · ':'Наша команда · ';if(!tm.ids.includes(id))info=prefix+r.name+': вне площадки. '+(id==='l'?'Центральный сейчас подаёт сам, либеро выйдет вместо него на следующем приёме.':'На задней линии вместо него играет либеро.');else info=prefix+r.name+' · зона '+tm.zones[id]+' · '+(front(tm.zones[id])?'передняя':'задняя')+' линия. '+(id==='s'?'Выходит на вторую передачу.':id==='l'?'Приём, защита и страховка.':id===tm.attacker?'Завершает атаку этой команды.':front(tm.zones[id])?'Атака, блок и страховка.':'Приём, защита и страховка.');}
  const selectedJob=(!a.cone||state.time<=a.cone.end+1e-8)?(state.selectedTeam==='home'?a.homeJobs:a.awayJobs)?.[state.selected]:null;
  if(selectedJob)info+=' Задача в защите: '+selectedJob.toLowerCase()+'.';
@@ -460,6 +460,7 @@ function showPhasePhoto(title){
  if(!file){fig.hidden=true;return;}
  const src='photos/'+file,cap=$('phasePhotoCredit');
  img.style.objectPosition=entry.position||'50% 50%';img.alt=entry.alt||title;
+ fig.style.aspectRatio=entry.ratio||'1';
  if(cap)cap.hidden=!entry.credit;
  if(cap){cap.replaceChildren();if(entry.credit){const l=document.createElement(entry.source?'a':'span');l.textContent='Фото: '+entry.credit;if(entry.source){l.href=entry.source;l.target='_blank';l.rel='noreferrer';}cap.append(l);}}
  img.title=entry&&entry.credit?'Фото: '+entry.credit:'';
