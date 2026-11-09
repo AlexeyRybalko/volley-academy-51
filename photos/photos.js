@@ -3,7 +3,7 @@
 window.academyPhotos = {
   counterattack: {file:'counterattack.jpg', position:'50% 15%', ratio:'4 / 5', alt:'Атакующий удар в прыжке при контратаке'},
   opponentPrepare: {file:'opponent-attack.jpg', position:'50% 35%', alt:'Соперник готовит атакующий удар у сетки'},
-  ready: {file:'ready.jpg', position:'50% 65%', alt:'Игрок в стойке готовится к подаче соперника'},
+  ready: {file:'ready.jpg', position:'50% 75%', alt:'Игроки команды в стойке перед подачей соперника'},
   receive: {file:'receive.jpg', position:'50% 0%', ratio:'4 / 5', alt:'Приём мяча снизу на тренировке'},
   serve: {file:'serve.jpg', position:'50% 53%', alt:'Игрок готовится выполнить подачу'},
   set: {file:'set.jpg', position:'50% 20%', alt:'Передача мяча двумя руками сверху'},
