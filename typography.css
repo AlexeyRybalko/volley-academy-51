@@ -64,9 +64,11 @@ h1 em{white-space:nowrap}
 .phase-picker[hidden]{display:none!important}
 .phase-picker{display:flex;flex-direction:column;flex:1;min-height:0;gap:10px;padding-top:8px}
 .phase-picker h2{flex:none;margin:4px 0 2px;font-size:24px}
-.phase-picker .phase-buttons{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:repeat(7,minmax(0,1fr));flex:1;min-height:0;gap:6px;margin:0}
-.phase-picker .phase-buttons button{min-width:0;min-height:0;padding:6px 7px;border:1px solid #bcb4a5;border-radius:6px;background:#fffdfa;color:#292d34;font-family:var(--text);font-size:12px;font-weight:600;line-height:1.2;text-align:left;text-wrap:balance;overflow-wrap:normal}
+.phase-picker .phase-buttons{display:grid;grid-template-columns:minmax(0,1fr);grid-template-rows:repeat(13,minmax(0,1fr));flex:1;min-height:0;gap:4px;margin:0}
+.phase-picker .phase-buttons button{display:flex;align-items:center;gap:8px;min-width:0;min-height:0;padding:3px 8px;border:1px solid #bcb4a5;border-radius:6px;background:#fffdfa;color:#292d34;font-family:var(--text);font-size:12px;font-weight:600;line-height:1.2;text-align:left;text-wrap:balance;overflow-wrap:normal}
 .phase-picker .phase-buttons button:hover{background:#e7dfd1;border-color:#7b7162}
 .phase-picker .phase-buttons button.active{background:#292d34;border-color:#292d34;color:#fff}
 .phase-picker .all-phases-button{flex:none;margin-top:0}
 @media(max-width:860px){.phase-picker .phase-buttons button{font-size:13px;padding:8px}.phase-picker{gap:12px}}
+
+.phase-step-number{flex:0 0 20px;font-variant-numeric:tabular-nums;opacity:.55;font-size:11px}

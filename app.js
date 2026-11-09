@@ -274,7 +274,7 @@ function updateControls(){
  const row=document.createElement('span');row.className='row';row.textContent=rosterModel.ids.includes(id)?(front(rosterModel.zones[id])?'ПЕРЕДНЯЯ':'ЗАДНЯЯ'):'ВНЕ ПОЛЯ';
  b.title=r.name;b.setAttribute('aria-label',r.name);b.append(sw,title,row);b.onclick=()=>selectPlayer(id,state.rosterTeam);const team=state.rosterTeam;const on=()=>{hoverPlayer={id,team};render();},off=()=>{if(hoverPlayer&&hoverPlayer.id===id){hoverPlayer=null;render();}};b.addEventListener('mouseenter',on);b.addEventListener('mouseleave',off);b.addEventListener('focus',on);b.addEventListener('blur',off);$('roster').append(b);
  }
- $('phaseButtons').replaceChildren();frames.forEach((f,i)=>{const b=document.createElement('button');b.textContent=window.volleyTypography(f.title);b.dataset.t=f.t;b.onclick=()=>{pause();setPhasePicker(false);seek((state.auto?Math.min(11,Math.floor(state.cycleTime/20))*20:0)+f.t);};$('phaseButtons').append(b);});
+ $('phaseButtons').replaceChildren();frames.forEach((f,i)=>{const b=document.createElement('button');const number=document.createElement('span');number.className='phase-step-number';number.textContent=String(i+1).padStart(2,'0');const label=document.createElement('span');label.textContent=window.volleyTypography(f.title);b.append(number,label);b.dataset.t=f.t;b.onclick=()=>{pause();setPhasePicker(false,()=>seek((state.auto?Math.min(11,Math.floor(state.cycleTime/20))*20:0)+f.t));};$('phaseButtons').append(b);});
  const labels=$('timelineLabels');labels.replaceChildren();labels.classList.toggle('full-cycle',state.auto);
  const names=state.auto?Array.from({length:6},(_,i)=>'Р'+((cycleStart.rotation+i)%6+1)+' · '+formatTime(i*40)):(state.mode==='receive'?['Расстановка','Наша атака','Защита','Контратака']:['Подача','Защита','Наша атака','Соперник']);
  names.forEach((name,i)=>{const n=document.createElement('span');n.textContent=name;n.dataset.chapter=i;labels.append(n);});
@@ -431,7 +431,7 @@ $('showCones').onchange=e=>{state.showCones=e.target.checked;render();};
 const calmMotion=!window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
 const easeOut='cubic-bezier(.2,.75,.25,1)';
 function animatePhaseCard(){
- if(!calmMotion||!$('phasePopup').animate||$('phasePopup').hidden)return;
+ if(!calmMotion||!$('phasePopup').animate||$('phasePopup').hidden||$('phasePopup').classList.contains('choosing-phase'))return;
  [[$('explainTitle'),0],[$('phasePhoto'),70],[$('explainText'),110],[$('playerText'),160]].forEach(([el,delay])=>{
   if(!el||el.hidden)return;
   el.animate([{opacity:0,transform:'translateY(10px)',filter:'blur(3px)'},{opacity:1,transform:'none',filter:'blur(0)'}],{duration:460,delay,easing:easeOut,fill:'backwards'});
@@ -450,12 +450,30 @@ function stepPhase(direction){
  else if(state.auto)seek(base+20>=cycleDuration?0:base+20);
 }
 $('previousPhase').onclick=()=>stepPhase(-1);$('nextPhase').onclick=()=>stepPhase(1);
-function setPhasePicker(open){
- $('phasePopup').classList.toggle('choosing-phase',open);
- $('phasePicker').hidden=!open;
- $('showPhasePicker').setAttribute('aria-expanded',String(open));
- if(open)($('phaseButtons').querySelector('.active')||$('phaseButtons').querySelector('button')||$('closePhasePicker')).focus();
- else $('showPhasePicker').focus();
+let phasePickerBusy=false;
+async function animatePhaseView(elements,enter){
+ if(!calmMotion)return;
+ await Promise.all(elements.filter(Boolean).map(el=>{
+  if(!el.animate)return Promise.resolve();
+  const keyframes=enter?[{opacity:0,transform:'translateY(18px)'},{opacity:1,transform:'none'}]:[{opacity:1,transform:'none'},{opacity:0,transform:'translateY(-24px)'}];
+  return el.animate(keyframes,{duration:enter?240:180,easing:easeOut}).finished.catch(()=>{});
+ }));
+}
+async function setPhasePicker(open,onReveal){
+ if(phasePickerBusy)return;
+ phasePickerBusy=true;
+ const popup=$('phasePopup'),picker=$('phasePicker'),card=[popup.querySelector('.explanation-heading'),popup.querySelector('.phase-body')];
+ popup.setAttribute('aria-busy','true');
+ try{
+  await animatePhaseView(open?card:[picker],false);
+  if(onReveal)onReveal();
+  popup.classList.toggle('choosing-phase',open);
+  picker.hidden=!open;
+  $('showPhasePicker').setAttribute('aria-expanded',String(open));
+  await animatePhaseView(open?[picker]:card,true);
+  if(open)($('phaseButtons').querySelector('.active')||$('phaseButtons').querySelector('button')||$('closePhasePicker')).focus();
+  else $('showPhasePicker').focus();
+ }finally{phasePickerBusy=false;popup.setAttribute('aria-busy','false');}
 }
 $('showPhasePicker').onclick=()=>{pause();setPhasePicker(true);};
 $('closePhasePicker').onclick=()=>setPhasePicker(false);
