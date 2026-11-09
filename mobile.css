@@ -15,15 +15,15 @@
  .intro .subtitle{font-size:14px;line-height:1.45;margin:8px 0 0;max-width:100%}
  .workspace,.workspace:fullscreen{display:flex;flex-direction:column;width:100%;max-width:100%;min-width:0;min-height:0;height:auto;overflow:hidden;border-radius:12px}
  .board-panel{height:auto;min-width:0;max-width:100%;overflow:visible;display:flex;flex-direction:column}
- .board-toolbar,.vertical-court .board-toolbar{position:static;display:flex;flex-wrap:wrap;gap:7px 12px;padding:11px 12px;min-width:0}
+ .board-toolbar,.vertical-court .board-toolbar{position:static;display:grid;grid-template-columns:1.25fr 1.15fr 1fr;gap:6px 8px;padding:11px 12px;min-width:0}
  .board-toolbar .orientation-picker{display:none!important}
  .no-element-fullscreen .board-toolbar .fullscreen-button{display:none}
- .board-toolbar>.segmented{width:100%;flex:1 0 100%;min-width:0;display:flex}
+ .board-toolbar>.segmented{grid-column:1/-1;width:100%;min-width:0;display:flex}
  .board-toolbar .segmented button{flex:1;min-width:0;min-height:36px;font-size:14px;padding:7px 10px}
- .board-toolbar .popup-toggle{font-family:var(--text);font-size:12px;min-height:34px;padding:6px 0;white-space:nowrap}
- .board-toolbar .fullscreen-button{width:34px;height:34px;min-height:34px;font-size:18px;padding:0;margin-left:auto;display:grid;place-items:center;flex:0 0 34px}
- .board-toolbar .switch{font-size:12px;gap:5px;min-height:32px;margin:0;line-height:1.25;white-space:nowrap}
- .board-toolbar input[type=checkbox]{width:18px;height:18px;margin:0;flex:0 0 18px}
+ .board-toolbar .popup-toggle{grid-column:1/-1;justify-self:start;font-family:var(--text);font-size:12px;min-height:30px;padding:5px 0;white-space:nowrap}
+ .board-toolbar .fullscreen-button{display:none!important}
+ .board-toolbar .switch{font-size:11px;letter-spacing:-.15px;gap:4px;min-height:32px;min-width:0;margin:0;line-height:1.25;white-space:nowrap}
+ .board-toolbar input[type=checkbox]{width:16px;height:16px;margin:0;flex:0 0 16px}
  .court-stage,.popup-hidden .court-stage{display:block;flex:none;min-width:0;width:100%;padding:8px 6px 4px;overflow:hidden}
  .court-stage .court-wrap,.vertical-court .court-wrap{display:block;width:100%;max-width:100%;min-width:0;height:auto;margin:0;overflow:hidden}
  #court,.court-wrap #court,.vertical-court #court{display:block;width:100%;height:auto;min-width:0;max-width:100%;max-height:none;aspect-ratio:820/860}
