@@ -28,7 +28,7 @@
     +`<figure>${court(srv.serving,server)}<figcaption>Мы подаём · подаёт ${esc(roles[server].short)}${serverNote}</figcaption></figure></div>`;
   }
   const legend=ORDER.map(id=>`<span class="ps-chip"><i style="background:${roles[id].color};color:${id==='s'||id==='l'?'#1d222b':'#fff'}">${roles[id].short}</i>${esc(roles[id].name)}</span>`).join('');
-  area.innerHTML=`<div class="ps-head"><img src="LOGO_ChERNOE-1.png" alt="Academy Volley"><div><h1>Расстановка 5–1</h1><p>Шпаргалка Волейбольной академии · стартовые позиции во всех 6 расстановках</p></div></div>`
+  area.innerHTML=`<div class="ps-head"><img src="LOGO_ChERNOE-1.png" alt="Academy Volley"><div><h1>Расстановка 5&#8288;–&#8288;1</h1><p>Шпаргалка Волейбольной академии · стартовые позиции во всех 6 расстановках</p></div></div>`
    +`<div class="ps-legend">${legend}</div>`
    +`<div class="ps-grid">${rows}</div>`
    +`<div class="ps-foot"><p><b>Порядок</b> проверяется в момент удара по подаче: передний ближе к сетке, чем задний за ним; в линии соседи не меняются местами слева направо.</p>`

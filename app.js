@@ -252,14 +252,16 @@ function updateControls(){
  $('receive').classList.toggle('active',state.mode==='receive');$('serve').classList.toggle('active',state.mode==='serve');
  $('receive').setAttribute('aria-pressed',state.mode==='receive');$('serve').setAttribute('aria-pressed',state.mode==='serve');
  $('rotations').replaceChildren();for(let r=0;r<6;r++){const b=document.createElement('button');b.textContent=r+1;b.className=r===state.rotation?'active':'';b.setAttribute('aria-label','Расстановка '+(r+1));b.setAttribute('aria-pressed',r===state.rotation);b.onclick=()=>{if(state.auto){const chapter=(r-cycleStart.rotation+6)%6;seek(chapter*40+(state.mode==='receive'?20:0));}else{state.rotation=r;restart();}};$('rotations').append(b);}
- $('rotationTitle').textContent='Связующий в зоне '+model.zones.s;
+ $('rotationTitle').textContent=window.volleyTypography('Связующий в зоне '+model.zones.s);
  $('openingChoice').hidden=state.rotation!==0;
  $('firstBall').checked=state.firstBall==='short';
  $('opponentOpeningChoice').hidden=state.opponentRotation!==0;$('openingGroup').hidden=state.rotation!==0&&state.opponentRotation!==0;
  $('opponentFirstBall').checked=(state.opponentFirstBall??'short')==='short';
  $('rotationNote').textContent=(front(model.zones.s)?'Передняя линия · 2 нападающих впереди':'Задняя линия · 3 нападающих впереди')+(model.replaced?' · либеро вместо Ц'+model.replaced.slice(1):' · центральный подаёт, либеро вне поля');
+ window.applyVolleyTypography($('rotationNote'));
  $('rowInfo').textContent='Связующий на '+(front(model.zones.s)?'передней':'задней')+' линии';
  $('attackNote').textContent=model.shortFirst?'На первую атаку диагональный остаётся слева, доигровщик — справа. Потом, при возврате в защиту, они меняются.':state.quality==='bad'?'С выбитого приёма — высокая передача на край.':state.attack===2&&!front(model.zones.o)?'Диагональный сзади: отталкивание за линией 3 м.':'На приёме — два доигровщика и либеро.';
+ window.applyVolleyTypography($('attackNote'));
  $('attack').querySelector('[value="3"]').disabled=state.quality==='bad';
  $('opponentRotation').value=state.opponentRotation;
  $('teamHome').classList.toggle('active',state.rosterTeam==='home');$('teamAway').classList.toggle('active',state.rosterTeam==='away');
@@ -457,6 +459,8 @@ function showPhasePhoto(title){
  const entry=name&&(window.academyPhotos||{})[name],file=typeof entry==='string'?entry:entry&&entry.file;
  if(!file){fig.hidden=true;return;}
  const src='photos/'+file,cap=$('phasePhotoCredit');
+ img.style.objectPosition=entry.position||'50% 50%';img.alt=entry.alt||title;
+ if(cap)cap.hidden=!entry.credit;
  if(cap){cap.replaceChildren();if(entry.credit){const l=document.createElement(entry.source?'a':'span');l.textContent='Фото: '+entry.credit;if(entry.source){l.href=entry.source;l.target='_blank';l.rel='noreferrer';}cap.append(l);}}
  img.title=entry&&entry.credit?'Фото: '+entry.credit:'';
  if(img.dataset.src===src){fig.hidden=img.dataset.ok!=='1';return;}
@@ -471,6 +475,7 @@ const escapeHtml=t=>t.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','
 function setRoleText(el,text){
  el.innerHTML=escapeHtml(text||'').replace(roleRe,w=>{const hit=roleWords.find(([re])=>re.test(w));if(!hit)return w;const id=hit[1],num=(w.match(/ ([12])$/)||[])[1],letter=id==='h1'?(num?'Д'+num:'Д'):id==='m1'?(num?'Ц'+num:'Ц'):roles[id].short,dark=id==='l'||id==='s';return '<span class="role-ref"><span class="role-dot" aria-hidden="true" style="background:'+roles[id].color+';color:'+(dark?'#1d222b':'#fff')+'">'+letter+'</span>'+w+'</span>';});
  if(window.decorateTerms)el.innerHTML=window.decorateTerms(el.innerHTML);
+ window.applyVolleyTypography(el);
 }
 /* Link to the current moment: everything needed to reopen the same frame lives in the address. */
 function stateToHash(){

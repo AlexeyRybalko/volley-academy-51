@@ -1,0 +1,24 @@
+/* Intentional line breaks: no word fragments or stranded notation. */
+h1,h2,h3{word-break:normal;overflow-wrap:normal;hyphens:none;text-wrap:balance}
+p,li{word-break:normal;hyphens:none;text-wrap:pretty}
+h1 em{white-space:nowrap}
+.phase-popup h2{overflow-wrap:normal}
+.notes article,.practice-card,.rules-head,.rule{min-width:0}
+.time-title{align-items:flex-start}
+.time-title strong{white-space:normal;overflow:visible;text-overflow:clip;line-height:1.25;text-wrap:balance}
+.time-title span{white-space:nowrap}
+@media(max-width:860px){
+ .time-title strong{white-space:normal;overflow:visible;text-overflow:clip}
+ .phase-popup p,.notes p,.rule p,.practice-card p,.method-content p,dialog li{overflow-wrap:normal}
+ .quiz-actions{flex-wrap:wrap}
+ .quiz-actions button{max-width:100%;white-space:normal}
+}
+
+/* Portrait originals: square framing keeps the action larger than a wide strip. */
+.phase-photo{aspect-ratio:1;max-height:none}
+.phase-photo img{object-fit:cover}
+.phase-photo figcaption[hidden]{display:none}
+@media(max-height:1000px) and (min-width:861px){.phase-photo{aspect-ratio:1}}
+@media(max-width:860px){
+ .phase-popup .phase-photo{width:100%;max-width:280px;max-height:none;aspect-ratio:1;margin:0 auto 14px}
+}

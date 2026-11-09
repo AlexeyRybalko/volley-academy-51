@@ -1,17 +1,12 @@
-/*
-  Фото к фазам розыгрыша.
-  Чтобы заменить фото: положи файл в эту папку (photos) и поменяй file у нужной ситуации.
-  Для своих фото credit и source можно убрать: {file:'serve.jpg'} или просто 'serve.jpg'.
-  Лучше горизонтальные, примерно 1200 × 750.
-  Текущие фото — Wikimedia Commons, свободные лицензии; автор и лицензия показываются под фото.
-*/
+/* Photos from Academy training and games. Position chooses the action in a square crop.
+   Originals remain in the user's Фото folder; no credit overlay is needed. */
 window.academyPhotos = {
-  receive: {file:'receive.jpg', credit:'Erik Drost · CC BY 2.0', source:'https://commons.wikimedia.org/wiki/File:Baldwin_Wallace_Yellow_Jackets_Volleyball_%2848781695928%29.jpg'}, // До подачи, приём
-  serve: {file:'serve.jpg', credit:'Jeffrey Ng · CC BY-SA 2.0', source:'https://commons.wikimedia.org/wiki/File:Serve_%2836458257516%29.jpg'}, // подача, сбор у сетки
-  set: {file:'set.jpg', credit:'Erik Drost · CC BY 2.0', source:'https://commons.wikimedia.org/wiki/File:Baldwin_Wallace_Yellow_Jackets_Volleyball_%2848781750458%29.jpg'}, // передача связующего
-  attack: {file:'attack.jpg', credit:'Jeffrey Ng · CC BY-SA 2.0', source:'https://commons.wikimedia.org/wiki/File:Triple_block_%28Serbia_vs_China%2C_Grand_Prix_2017%29.jpg'}, // атака, контратака
-  cover: {file:'cover.jpg', credit:'Carlos Delgado · CC BY-SA 3.0', source:'https://commons.wikimedia.org/wiki/File:Bilateral_Espa%C3%B1a-Portugal_de_voleibol_-_02.jpg'}, // страховка
-  block: {file:'block.jpg', credit:'pjt56 · CC BY-SA 3.0', source:'https://commons.wikimedia.org/wiki/File:Volleyball_attack_and_triple_block-pjt.jpg'}, // блок и выход в защиту
-  dig: {file:'dig.jpg', credit:'Erik Drost · CC BY 2.0', source:'https://commons.wikimedia.org/wiki/File:Baldwin_Wallace_Yellow_Jackets_Volleyball_%2848781697883%29.jpg'}, // касание в защите
-  point: {file:'point.jpg', credit:'Erik Drost · CC BY 2.0', source:'https://commons.wikimedia.org/wiki/File:Baldwin_Wallace_Yellow_Jackets_Volleyball_%2851443327048%29.jpg'}, // очко
+  receive: {file:'receive.jpg', position:'50% 0%', alt:'Приём мяча снизу на тренировке'},
+  serve: {file:'serve.jpg', position:'50% 53%', alt:'Игрок готовится выполнить подачу'},
+  set: {file:'set.jpg', position:'50% 20%', alt:'Передача мяча двумя руками сверху'},
+  attack: {file:'attack.jpg', position:'50% 43%', alt:'Нападающий атакует в прыжке у сетки'},
+  cover: {file:'cover.jpg', position:'50% 65%', alt:'Игрок в низкой стойке готов страховать партнёров'},
+  block: {file:'block.jpg', position:'50% 44%', alt:'Два игрока ставят организованный блок у сетки'},
+  dig: {file:'dig.jpg', position:'50% 58%', alt:'Защитник поднимает мяч в падении'},
+  point: {file:'point.jpg', position:'50% 62%', alt:'Команда собирается вместе после розыгрыша'},
 };

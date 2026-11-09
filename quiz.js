@@ -102,7 +102,7 @@
  let round=[],index=0,score=0;
  function start(){round=buildRound();index=0;score=0;render();if(!dlg.open)dlg.showModal();}
  function setProgress(){progress.textContent=index<round.length?`Вопрос ${index+1} из ${round.length}`:'Готово';bar.style.width=(index/round.length*100)+'%';}
- function decorate(el,text){if(window.decorateTerms)el.innerHTML=window.decorateTerms(text.replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c])));else el.textContent=text;}
+ function decorate(el,text){if(window.decorateTerms)el.innerHTML=window.decorateTerms(text.replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c])));else el.textContent=text;window.applyVolleyTypography(el);}
  function render(){
   setProgress();body.replaceChildren();
   if(index>=round.length)return finish();
@@ -130,13 +130,14 @@
    });
    const hint=document.createElement('p');hint.className='quiz-hint';hint.textContent='Нажми на зону. Сетка сверху.';answerArea.append(hint);
   }else{
-   q.options.forEach(o=>{const b=document.createElement('button');b.className='quiz-option';b.textContent=o.label;b.onclick=()=>{b.dataset.chosen='1';answer(o.ok);};answerArea.append(b);});
+   q.options.forEach(o=>{const b=document.createElement('button');b.className='quiz-option';b.textContent=window.volleyTypography(o.label);b.onclick=()=>{b.dataset.chosen='1';answer(o.ok);};answerArea.append(b);});
   }
  }
  function finish(){
   const pct=score/round.length;
   const msg=pct===1?'Идеально! Расстановку 5–1 ты знаешь.':pct>=.75?'Отлично! Осталось чуть-чуть.':pct>=.5?'Неплохо. Загляни в тренажёр на ошибочные вопросы.':'Стоит ещё раз пройти расстановки в тренажёре — и попробовать снова.';
   body.innerHTML=`<div class="quiz-result"><p class="quiz-score">${score} из ${round.length}</p><p>${msg}</p></div>`;
+  window.applyVolleyTypography(body);
   const scoreEl=body.querySelector('.quiz-score');
   if(score>0&&!window.matchMedia?.('(prefers-reduced-motion: reduce)').matches){
    const t0=performance.now(),dur=650+score*90;

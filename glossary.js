@@ -50,7 +50,7 @@
  function show(el){
   const text=tips[el.dataset.term];if(!text)return;
   if(!tip){tip=document.createElement('div');tip.className='term-tip';tip.setAttribute('role','tooltip');document.body.append(tip);}
-  tip.textContent=text;tip.classList.add('show');
+  tip.textContent=window.volleyTypography?.(text)||text;tip.classList.add('show');
   const r=el.getBoundingClientRect(),w=Math.min(320,window.innerWidth-24);
   tip.style.maxWidth=w+'px';
   const tw=tip.offsetWidth,th=tip.offsetHeight;
