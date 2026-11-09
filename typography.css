@@ -41,3 +41,17 @@ h1 em{white-space:nowrap}
 /* Keep the card clean and its width stable, including when content can scroll. */
 .phase-popup{scrollbar-width:none;scrollbar-gutter:auto}
 .phase-popup::-webkit-scrollbar{display:none;width:0;height:0}
+
+/* Navigation belongs to a fixed footer, outside the scrolling explanation. */
+.phase-popup{height:100%;overflow:hidden;display:flex;flex-direction:column}
+.phase-popup>.popup-kicker,.phase-popup>.explanation-heading{flex:none}
+.phase-body{display:flex;flex-direction:column;flex:1;min-height:0}
+.phase-content{flex:1;min-height:0;overflow:auto;overscroll-behavior:contain;scrollbar-width:none}
+.phase-content::-webkit-scrollbar{display:none;width:0;height:0}
+.phase-footer{position:relative;flex:none;padding-top:14px;background:#f4f1ea}
+.phase-popup .phase-nav{margin-top:0}
+.phase-footer .phase-list .phase-buttons{position:absolute;z-index:3;bottom:calc(100% + 6px);left:0;right:0;max-height:min(240px,40dvh);overflow:auto;scrollbar-width:none;margin:0;padding:12px;background:#f4f1ea;border:1px solid #d4cfc4;border-radius:8px;box-shadow:0 -8px 24px #0002}
+.phase-footer .phase-list .phase-buttons::-webkit-scrollbar{display:none}
+@media(max-width:860px){
+ .workspace>.phase-popup{display:flex;height:min(800px,calc(100dvh - 32px));min-height:360px;overflow:hidden}
+}

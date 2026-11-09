@@ -356,7 +356,7 @@ function render(){
  for(const chapter of $('timelineLabels').children)chapter.classList.toggle('current',state.auto&&Number(chapter.dataset.chapter)===Math.min(5,Math.floor(state.cycleTime/40)));
  const phaseKey=state.rotation+':'+state.mode+':'+index;
  if(phaseKey!==lastPhaseKey){touchRipple(a);
- lastPhaseKey=phaseKey;showPhasePhoto(a.title,frames[index+1]?.title);
+ lastPhaseKey=phaseKey;$('phaseContent').scrollTop=0;showPhasePhoto(a.title,frames[index+1]?.title);
  animatePhaseCard();
  }
  $('previousPhase').disabled=!state.auto&&state.time===0;
@@ -427,12 +427,11 @@ $('opponentFirstBall').onchange=e=>{state.opponentFirstBall=e.target.checked?'sh
 $('serveGroup').onchange=e=>{state.serveGroup=e.target.checked;restart();};
 $('opponentAttack').onchange=e=>{state.opponentAttack=+e.target.value;build();};
 $('showCones').onchange=e=>{state.showCones=e.target.checked;render();};
-/* Phase card: a soft lift of the card, then title, photo and text arrive one after another. */
+/* Animate only content; the card and navigation stay anchored. */
 const calmMotion=!window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
 const easeOut='cubic-bezier(.2,.75,.25,1)';
 function animatePhaseCard(){
  if(!calmMotion||!$('phasePopup').animate||$('phasePopup').hidden)return;
- $('phasePopup').animate([{transform:'translateY(6px) scale(.985)',boxShadow:'0 8px 20px #0004'},{transform:'none',boxShadow:'0 18px 40px #0007'}],{duration:420,easing:easeOut});
  [[$('explainTitle'),0],[$('phasePhoto'),70],[$('explainText'),110],[$('playerText'),160]].forEach(([el,delay])=>{
   if(!el||el.hidden)return;
   el.animate([{opacity:0,transform:'translateY(10px)',filter:'blur(3px)'},{opacity:1,transform:'none',filter:'blur(0)'}],{duration:460,delay,easing:easeOut,fill:'backwards'});
