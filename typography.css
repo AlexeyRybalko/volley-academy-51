@@ -38,5 +38,6 @@ h1 em{white-space:nowrap}
 
 .phase-photo[data-state="ready"] .photo-loader-mark::before,.phase-photo[data-state="error"] .photo-loader-mark::before{animation:none}
 
-/* Reserve scrollbar space as phase explanations change length. */
-.phase-popup{scrollbar-gutter:stable}
+/* Keep the card clean and its width stable, including when content can scroll. */
+.phase-popup{scrollbar-width:none;scrollbar-gutter:auto}
+.phase-popup::-webkit-scrollbar{display:none;width:0;height:0}
