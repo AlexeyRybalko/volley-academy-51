@@ -78,5 +78,5 @@ h1 em{white-space:nowrap}
 @media(max-height:1000px) and (min-width:861px){
  .phase-picker .phase-buttons{grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:repeat(7,minmax(0,1fr))}
  .phase-picker .phase-buttons button{font-size:13px;padding:4px 6px;gap:4px}
- .phase-step-number{flex-basis:16px;font-size:10px}
+ .phase-picker .phase-step-number{display:none}
 }
