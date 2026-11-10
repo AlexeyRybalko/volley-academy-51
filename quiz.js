@@ -137,6 +137,10 @@
   const pct=score/round.length;
   const msg=pct===1?'Идеально! Расстановку 5–1 ты знаешь.':pct>=.75?'Отлично! Осталось чуть-чуть.':pct>=.5?'Неплохо. Загляни в тренажёр на ошибочные вопросы.':'Стоит ещё раз пройти расстановки в тренажёре — и попробовать снова.';
   body.innerHTML=`<div class="quiz-result"><p class="quiz-score">${score} из ${round.length}</p><p>${msg}</p></div>`;
+  const invite=document.createElement('div');invite.className='quiz-join';
+  invite.innerHTML='<p><b>'+(pct>=.75?'Пора проверить себя на площадке!':'Разобраться в 5–1 проще всего на площадке.')+'</b> Тренировки для любого уровня.</p>'
+   +'<a class="join-button" href="https://vk.ru/volley_academy" target="_blank" rel="noopener">Записаться на тренировку<svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></a>';
+  body.querySelector('.quiz-result').append(invite);
   window.applyVolleyTypography(body);
   const scoreEl=body.querySelector('.quiz-score');
   if(score>0&&!window.matchMedia?.('(prefers-reduced-motion: reduce)').matches){
