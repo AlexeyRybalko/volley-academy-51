@@ -375,11 +375,27 @@ function playerInfoFor(a,t=state.time){
 /* Phones: the phase card keeps one height for the whole rally (the tallest phase),
    so "Назад" and "Дальше" never jump under the finger and nothing scrolls inside. */
 let stabKey='';
+let desktopFitKey='';
 function stabilizePhaseCard(force){
  const popup=$('phasePopup'),content=$('phaseContent'),heading=popup&&popup.querySelector('.explanation-heading');
  if(!content||!frames||!frames.length)return;
  const mobile=window.matchMedia('(max-width: 860px)').matches;
- if(!mobile){if(stabKey){content.style.minHeight='';if(heading)heading.style.minHeight='';stabKey='';}return;}
+ if(!mobile){
+  if(stabKey){content.style.minHeight='';if(heading)heading.style.minHeight='';stabKey='';}
+  if(popup.hidden||popup.classList.contains('choosing-phase'))return;
+  const photo=$('phasePhoto');
+  const key=[content.clientWidth,content.clientHeight,$('explainTitle').textContent,$('explainText').innerHTML,$('playerText').innerHTML].join('|');
+  if(key===desktopFitKey&&!force)return;
+  photo.style.height='';
+  let height=photo.getBoundingClientRect().height;
+  // Keep the existing rounded/float layout; crop the photo only as much as needed.
+  for(let i=0;i<20&&content.scrollHeight>content.clientHeight&&height>0;i++){
+   height=Math.max(0,height-Math.max(8,content.scrollHeight-content.clientHeight));
+   photo.style.height=height+'px';
+  }
+  desktopFitKey=key;return;
+ }
+ desktopFitKey='';$('phasePhoto').style.height='';
  if(popup.hidden||popup.classList.contains('choosing-phase')||!content.clientWidth)return;
  const key=[state.rotation,state.mode,state.auto,state.selected,state.selectedTeam,state.orientation,state.quality,state.attack,state.opponentAttack,state.opponentRotation,state.firstBall,state.opponentFirstBall,state.serveGroup,content.clientWidth,frames.length].join('|');
  if(key===stabKey&&!force)return;
