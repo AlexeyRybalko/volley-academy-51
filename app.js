@@ -483,6 +483,7 @@ $('phasePicker').addEventListener('keydown',e=>{if(e.key==='Escape'){e.preventDe
 const phasePhotos=[[/^Повторная передача$/,'repeatSet'],[/^Соперник выходит в защиту$/,'opponentDefense'],[/^Контратака$/,'counterattack'],[/^Соперник готовит атаку$/,'opponentPrepare'],[/До подачи/,'ready'],[/^Приём$/,'receive'],[/подач|Сбор у сетки/i,'serve'],[/Касание|Приём соперника/,'dig'],[/передача/i,'set'],[/Блок|защит|готовит/i,'block'],[/Страховка/,'cover'],[/атак/i,'attack'],[/Очко/,'point']];
 const phasePhotoCache=new Map();
 function phasePhotoEntry(title){
+ if(state.mode==='serve'&&window.academyServePhotos?.[title])return window.academyServePhotos[title];
  const match=phasePhotos.find(([re])=>re.test(title||''));
  return match&&(window.academyPhotos||{})[match[1]];
 }

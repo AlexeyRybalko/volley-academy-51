@@ -21,11 +21,11 @@ for(const name of siteFiles){
 const photoContext={window:{}};
 try{
  vm.runInNewContext(fs.readFileSync(path.join(root,'photos/photos.js'),'utf8'),photoContext);
- for(const entry of Object.values(photoContext.window.academyPhotos||{})){
+ for(const entry of [...Object.values(photoContext.window.academyPhotos||{}),...Object.values(photoContext.window.academyServePhotos||{})]){
   const file=typeof entry==='string'?entry:entry.file;
   checkReference('photos/'+file,path.join(root,'index.html'));
  }
 }catch(error){failures.push('Invalid photo manifest: '+error.message);}
-const photoCount=Object.keys(photoContext.window.academyPhotos||{}).length;
+const photoCount=Object.keys(photoContext.window.academyPhotos||{}).length+Object.keys(photoContext.window.academyServePhotos||{}).length;
 if(failures.length){console.error(failures.join('\n'));process.exit(1);}
 console.log(`Validated ${siteFiles.length} HTML/CSS/JS files, their local assets, and ${photoCount} phase photos.`);

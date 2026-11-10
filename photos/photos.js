@@ -15,3 +15,13 @@ window.academyPhotos = {
   dig: {file:'dig.5bf811ad76.webp', position:'50% 50%', alt:'Защитник принимает мяч снизу во время игры в защите'},
   point: {file:'point.e896c43cb8.webp', position:'50% 62%', alt:'Команда собирается вместе после розыгрыша'},
 };
+
+/* Exact phase overrides for the rally that starts with our serve. */
+window.academyServePhotos = {
+  'Сбор у сетки': {file:'serve-net.a60b1a1760.webp', position:'50% 70%', alt:'Игроки собираются у сетки перед подачей'},
+  'Выход в защиту': {file:'serve-defense-out.a8e57452fc.webp', position:'50% 65%', alt:'Команда выходит на позиции в защите после подачи'},
+  'Касание в защите': {...window.academyPhotos.receive, alt:'Защитник касается мяча снизу'},
+  'Наша передача': {file:'serve-set.5cc2d6d02b.webp', position:'50% 45%', alt:'Связующий выполняет нашу передачу после защиты'},
+  'Возврат в защиту': {...window.academyPhotos.ready, alt:'Команда возвращается на позиции в защите'},
+  'Атака соперника': {...window.academyPhotos.counterattack, alt:'Соперник атакует в прыжке'},
+};
