@@ -356,7 +356,7 @@ function render(){
  for(const chapter of $('timelineLabels').children)chapter.classList.toggle('current',state.auto&&Number(chapter.dataset.chapter)===Math.min(5,Math.floor(state.cycleTime/40)));
  const phaseKey=state.rotation+':'+state.mode+':'+index;
  if(phaseKey!==lastPhaseKey){touchRipple(a);
- lastPhaseKey=phaseKey;$('phaseContent').scrollTop=0;showPhasePhoto(a.title,frames[index+1]?.title);
+ lastPhaseKey=phaseKey;$('phaseContent').scrollTop=0;showPhasePhoto(a.title,frames[index+1]?.title);pinPhasePhoto(index);
  animatePhaseCard();
  }
  $('previousPhase').disabled=!state.auto&&state.time===0;
@@ -515,6 +515,22 @@ $('showPhasePicker').onclick=()=>{pause();setPhasePicker(true);};
 $('closePhasePicker').onclick=()=>setPhasePicker(false);
 $('phasePicker').addEventListener('keydown',e=>{if(e.key==='Escape'){e.preventDefault();setPhasePicker(false);}});
 
+
+/* Each phase card shows its photo as a pinned snapshot with its own tilt and fastener. */
+const PIN_SVG='<svg viewBox="0 0 30 34" aria-hidden="true"><defs><radialGradient id="pinHead" cx="38%" cy="32%" r="70%"><stop offset="0" stop-color="#ef7d82"/><stop offset=".55" stop-color="#c4474d"/><stop offset="1" stop-color="#8e2a30"/></radialGradient></defs>'
+ +'<ellipse cx="19" cy="31" rx="6.5" ry="2.2" fill="#0003"/><path d="M15 18 19.5 30" stroke="#9aa0a8" stroke-width="1.7" stroke-linecap="round"/>'
+ +'<ellipse cx="15" cy="16.5" rx="7" ry="2.6" fill="#8e2a30"/><path d="M10 9.5h10v6.8H10z" fill="#b03a40"/><circle cx="15" cy="10" r="8.5" fill="url(#pinHead)"/><ellipse cx="12" cy="7" rx="3" ry="2" fill="#fff" opacity=".55"/></svg>';
+function pinPhasePhoto(index){
+ const fig=$('phasePhoto');if(!fig)return;
+ // Neighbouring phases always lean opposite ways and use different fasteners.
+ const tilts=[-2.4,1.8,-1.2,2.8,-2.9,1.3,-1.8,2.3];
+ const kinds=['pin','tape','pin','corners'];
+ fig.style.setProperty('--tilt',tilts[index%tilts.length]+'deg');
+ let pin=fig.querySelector('.photo-fastener');
+ if(!pin){pin=document.createElement('span');pin.className='photo-fastener';pin.setAttribute('aria-hidden','true');fig.append(pin);}
+ const kind=kinds[index%kinds.length];
+ if(pin.dataset.kind!==kind){pin.dataset.kind=kind;pin.innerHTML=kind==='pin'?PIN_SVG:'';}
+}
 /* Photos for phases: list files in photos/photos.js. */
 const phasePhotos=[[/^Повторная передача$/,'repeatSet'],[/^Соперник выходит в защиту$/,'opponentDefense'],[/^Контратака$/,'counterattack'],[/^Соперник готовит атаку$/,'opponentPrepare'],[/До подачи/,'ready'],[/^Приём$/,'receive'],[/подач|Сбор у сетки/i,'serve'],[/Касание|Приём соперника/,'dig'],[/передача/i,'set'],[/Блок|защит|готовит/i,'block'],[/Страховка/,'cover'],[/атак/i,'attack'],[/Очко/,'point']];
 const phasePhotoCache=new Map();
