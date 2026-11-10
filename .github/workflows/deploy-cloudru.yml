@@ -22,6 +22,10 @@ jobs:
           node-version: 22
       - name: Validate JavaScript and local assets
         run: node scripts/validate-site.mjs
+      - name: Verify own daily counter
+        run: |
+          node scripts/test-visitors.mjs
+          node --test counter-service/tests/counter.test.mjs
 
   deploy:
     needs: validate

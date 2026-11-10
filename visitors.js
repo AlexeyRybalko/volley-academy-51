@@ -1,47 +1,64 @@
-/* Public aggregate only. No fabricated counts and no credentials in the browser. */
+/* Own daily aggregate. Metrica is not used by this banner. */
 (()=>{
  'use strict';
  const badge=document.getElementById('dailyAudience');
  if(!badge)return;
  const number=document.getElementById('dailyAudienceCount'),people=document.getElementById('dailyAudiencePeople');
- const endpoint='https://informer.yandex.ru/informer/114161051/json';
- const format=new Intl.NumberFormat('ru-RU');
- let timer,pending=false;
- function today(){
-  const parts=new Intl.DateTimeFormat('en-US',{timeZone:'Europe/Moscow',year:'numeric',month:'2-digit',day:'2-digit'}).formatToParts(new Date());
-  const value=type=>parts.find(p=>p.type===type).value;
-  return value('year')+'.'+value('month')+'.'+value('day');
+ const endpoint='https://volley-academy-daily-counter.alfisherntech.chatgpt.site/v1';
+ const format=new Intl.NumberFormat('ru-RU'),ids=new Map();
+ let timer,pending=false,registeredDay=null;
+ function browserId(day){
+  if(ids.has(day))return ids.get(day);
+  const key='va.daily-visitor.'+day;
+  for(const name of ['localStorage','sessionStorage']){
+   try{const value=window[name].getItem(key);if(/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(value)){ids.set(day,value);return value;}}catch(_){/* Storage can be disabled. */}
+  }
+  const bytes=crypto.getRandomValues(new Uint8Array(16));bytes[6]=(bytes[6]&15)|64;bytes[8]=(bytes[8]&63)|128;
+  const hex=Array.from(bytes,b=>b.toString(16).padStart(2,'0')).join('');
+  const id=hex.slice(0,8)+'-'+hex.slice(8,12)+'-'+hex.slice(12,16)+'-'+hex.slice(16,20)+'-'+hex.slice(20);
+  ids.set(day,id);
+  for(const name of ['localStorage','sessionStorage'])try{window[name].setItem(key,id);}catch(_){}
+  return id;
  }
- function parse(text){
-  const match=text.trim().match(/^var\s+yandex_metrika_json_informer\s*=\s*(\{[\s\S]*\})\s*;?$/);
-  const data=JSON.parse(match?match[1]:text);
-  if(typeof data.current_date!=='string'||data.current_date.slice(0,10)!==today())return null;
-  const count=typeof data.uniques==='string'&&/^\d+$/.test(data.uniques)?Number(data.uniques):data.uniques;
-  return Number.isSafeInteger(count)&&count>=0?count:null;
- }
+ function valid(data){return data&&/^\d{4}-\d{2}-\d{2}$/.test(data.day)&&Number.isSafeInteger(data.count)&&data.count>=0&&data.timeZone==='Europe/Moscow';}
  function word(n){const a=n%100,b=n%10;return a>=11&&a<=14?'человек':b>=1&&b<=4?'человека':'человек';}
  function show(count){
-  const wasHidden=badge.hidden;
-  badge.hidden=count===null;
+  const wasHidden=badge.hidden;badge.hidden=count===null;
   if(count!==null){number.textContent=format.format(count);people.textContent=word(count);}
   if(wasHidden!==badge.hidden)window.dispatchEvent(new Event('resize'));
  }
+ async function request(path,signal,body){
+  const response=await fetch(endpoint+path,{mode:'cors',credentials:'omit',cache:'no-store',referrerPolicy:'origin',signal,...(body?{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)}:{})});
+  if(!response.ok){const error=new Error('Counter unavailable');error.status=response.status;throw error;}
+  return response.json();
+ }
+ async function audience(signal){
+  // Server day avoids errors from phone clocks and handles Moscow midnight.
+  for(let attempt=0;attempt<2;attempt++){
+   const data=await request('/today',signal);
+   if(!valid(data))throw new Error('Invalid count');
+   if(registeredDay===data.day)return data.count;
+   const token=await request('/token',signal,{id:browserId(data.day)});
+   if(token.day!==data.day)continue;
+   try{
+    const result=await request('/visit',signal,{token:token.token});
+    if(!valid(result)||result.day!==data.day)throw new Error('Invalid registration');
+    registeredDay=result.day;return result.count;
+   }catch(error){if(error.status===409)continue;throw error;}
+  }
+  throw new Error('Day changed');
+ }
  async function refresh(){
-  clearTimeout(timer);
-  if(pending)return;
+  clearTimeout(timer);if(pending)return;
   if(document.hidden){timer=setTimeout(refresh,30000);return;}
   pending=true;
-  const controller=new AbortController(),timeout=setTimeout(()=>controller.abort(),6500);
+  const controller=new AbortController(),timeout=setTimeout(()=>controller.abort(),12000);
   let count=null;
-  try{
-   const response=await fetch(endpoint,{mode:'cors',credentials:'omit',cache:'no-store',referrerPolicy:'origin',signal:controller.signal});
-   if(!response.ok)throw new Error('Informer unavailable');
-   count=parse(await response.text());
-  }catch(_){/* Analytics must never interfere with the trainer. */}
+  try{count=await audience(controller.signal);}catch(_){/* A counter must never interrupt the trainer or invent a number. */}
   finally{clearTimeout(timeout);pending=false;}
-  show(count);
-  timer=setTimeout(refresh,count===null?30000:180000);
+  show(count);timer=setTimeout(refresh,count===null?30000:180000);
  }
+ badge.title='Посетители за сегодня · московское время · один браузер учитывается один раз в день';
  document.addEventListener('visibilitychange',()=>{if(!document.hidden)refresh();});
  refresh();
 })();
