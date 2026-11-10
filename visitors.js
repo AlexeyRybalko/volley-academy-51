@@ -21,7 +21,7 @@
   return id;
  }
  function valid(data){return data&&/^\d{4}-\d{2}-\d{2}$/.test(data.day)&&Number.isSafeInteger(data.count)&&data.count>=0&&data.timeZone==='Europe/Moscow';}
- function word(n){const a=n%100,b=n%10;return a>=11&&a<=14?'человек':b>=1&&b<=4?'человека':'человек';}
+ function word(n){const a=n%100,b=n%10;return a>=11&&a<=14?'человек':b>=2&&b<=4?'человека':'человек';}
  // Show the count only once the day has a few visitors: a lonely "1" in the morning looks sad.
  const MIN_VISIBLE=7;
  function show(count){
