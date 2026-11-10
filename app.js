@@ -386,16 +386,22 @@ function stabilizePhaseCard(force){
   const photo=$('phasePhoto');
   const key=[content.clientWidth,content.clientHeight,$('explainTitle').textContent,$('explainText').innerHTML,$('playerText').innerHTML].join('|');
   if(key===desktopFitKey&&!force)return;
-  photo.style.height='';
+  photo.style.height='';content.classList.remove('compact-copy','tight-copy');
   let height=photo.getBoundingClientRect().height;
   // Keep the existing rounded/float layout; crop the photo only as much as needed.
-  for(let i=0;i<20&&content.scrollHeight>content.clientHeight&&height>0;i++){
-   height=Math.max(0,height-Math.max(8,content.scrollHeight-content.clientHeight));
-   photo.style.height=height+'px';
+  for(const size of ['', 'compact-copy','tight-copy']){
+   if(size)content.classList.add(size);
+   photo.style.height='';height=photo.getBoundingClientRect().height;
+   const minimum=size==='tight-copy'?0:Math.min(80,height);
+   for(let i=0;i<20&&content.scrollHeight>content.clientHeight&&height>minimum;i++){
+    height=Math.max(minimum,height-Math.max(8,content.scrollHeight-content.clientHeight));
+    photo.style.height=height+'px';
+   }
+   if(content.scrollHeight<=content.clientHeight)break;
   }
   desktopFitKey=key;return;
  }
- desktopFitKey='';$('phasePhoto').style.height='';
+ desktopFitKey='';$('phasePhoto').style.height='';content.classList.remove('compact-copy','tight-copy');
  if(popup.hidden||popup.classList.contains('choosing-phase')||!content.clientWidth)return;
  const key=[state.rotation,state.mode,state.auto,state.selected,state.selectedTeam,state.orientation,state.quality,state.attack,state.opponentAttack,state.opponentRotation,state.firstBall,state.opponentFirstBall,state.serveGroup,content.clientWidth,frames.length].join('|');
  if(key===stabKey&&!force)return;
