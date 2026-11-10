@@ -90,23 +90,13 @@ header{flex-wrap:wrap;gap:14px 24px}
 }
 
 /* Phase photo as a snapshot pinned into the coach's notebook: white border, soft shadow,
-   its own tilt for every phase, held by a push pin or tape (drawn in code, no image assets) */
+   its own tilt for every phase, held by transparent tape or the Academy red pushpin */
 .phase-popup .phase-photo{overflow:visible;border:7px solid #fffdf8;border-bottom-width:9px;border-radius:2px;background:#fffdf8;box-sizing:border-box;
  box-shadow:0 1px 2px #0002,0 8px 18px -6px #0004,0 18px 28px -18px #0003;rotate:var(--tilt,-1.5deg);transition:rotate .45s cubic-bezier(.3,1.3,.5,1)}
 .phase-popup .phase-photo img,.phase-popup .photo-placeholder{border-radius:1px}
 .phase-popup .phase-photo img{filter:saturate(.97) contrast(1.02)}
 .phase-popup .photo-placeholder{background:linear-gradient(135deg,#e7e1d6,#f0ebe2)}
-.photo-fastener{position:absolute;z-index:3;pointer-events:none}
-.photo-fastener[data-kind="pin"]{top:-17px;left:50%;width:30px;height:34px;margin-left:-15px}
-.photo-fastener svg{display:block;width:100%;height:100%;overflow:visible}
-.photo-fastener[data-kind="tape"]{top:-15px;left:50%;width:96px;height:28px;margin-left:-48px;rotate:-3deg}
-.photo-fastener[data-kind="tape"]::before,.photo-fastener[data-kind="corners"]::before,.photo-fastener[data-kind="corners"]::after{content:"";position:absolute;inset:0;
- background:linear-gradient(180deg,#f0dfaee6,#e2cf98e6);box-shadow:0 1px 3px #0003;
- clip-path:polygon(0 8%,4% 0,8% 9%,12% 0,16% 8%,20% 0,80% 0,84% 9%,88% 0,92% 8%,96% 0,100% 9%,100% 92%,96% 100%,92% 91%,88% 100%,84% 92%,80% 100%,20% 100%,16% 91%,12% 100%,8% 92%,4% 100%,0 91%)}
-.photo-fastener[data-kind="corners"]{inset:0}
-.photo-fastener[data-kind="corners"]::before,.photo-fastener[data-kind="corners"]::after{inset:auto;width:64px;height:22px}
-.photo-fastener[data-kind="corners"]::before{top:-6px;left:-20px;rotate:-38deg}
-.photo-fastener[data-kind="corners"]::after{top:-6px;right:-20px;rotate:38deg}
+.photo-fastener{position:absolute;inset:0;z-index:3;pointer-events:none}
 @media(prefers-reduced-motion:reduce){.phase-popup .phase-photo{transition:none}}
 /* Room for the pin and tapes so the card never clips them (tilt included) */
 .phase-popup .phase-photo{margin-top:32px}
@@ -132,3 +122,15 @@ header{flex-wrap:wrap;gap:14px 24px}
 .phase-popup .photo-fastener img.fx-ctl{top:calc(-2px * var(--fx));left:calc(-20px * var(--fx));rotate:-40deg}
 .phase-popup .photo-fastener img.fx-ctr{top:calc(-2px * var(--fx));right:calc(-20px * var(--fx));rotate:40deg}
 .phase-popup .photo-fastener img.fx-muted{filter:saturate(.62) brightness(.9) contrast(1.02)}
+
+/* Real tape straddles the paper edge; only two phases use a centered red pin. */
+.phase-popup .photo-fastener img.fx-pushpin{width:calc(60px * var(--fx));top:calc(-34px * var(--fx));left:50%;margin:0;translate:-50% 0;rotate:0deg}
+.phase-popup .photo-fastener img.fx-tape{width:calc(150px * var(--fx));top:calc(-26px * var(--fx));left:50%;margin:0;translate:-50% 0;rotate:-2deg;opacity:1}
+.phase-popup .photo-fastener img.fx-tape-left{left:44%;rotate:3deg}
+.phase-popup .photo-fastener img.fx-tape-clear{width:calc(112px * var(--fx));top:calc(-30px * var(--fx));rotate:1deg}
+.phase-popup .photo-fastener img.fx-clear{width:calc(94px * var(--fx));opacity:1}
+.phase-popup .photo-fastener img.fx-ctl{top:calc(-20px * var(--fx));left:calc(-24px * var(--fx));rotate:-34deg}
+.phase-popup .photo-fastener img.fx-ctr{top:calc(-20px * var(--fx));right:calc(-24px * var(--fx));rotate:34deg}
+/* A gentle print treatment: the action stays clear and the original files stay intact. */
+.phase-popup .phase-photo #phasePhotoImg{filter:saturate(.9) contrast(.98) sepia(.08) brightness(1.02)}
+.phase-popup .phase-photo[data-state="ready"]::after{content:"";position:absolute;inset:0;z-index:2;pointer-events:none;border-radius:1px;opacity:.075;mix-blend-mode:multiply;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.82' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Cpath fill='%23808080' filter='url%28%23n%29' d='M0 0h180v180H0z'/%3E%3C/svg%3E")}

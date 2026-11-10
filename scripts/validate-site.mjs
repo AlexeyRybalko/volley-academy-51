@@ -20,6 +20,13 @@ for(const name of siteFiles){
 }
 const photoContext={window:{}};
 try{
+ const app=fs.readFileSync(path.join(root,'app.js'),'utf8');
+ const literal=app.match(/const FASTENERS=(\[[\s\S]*?\]);\s*function pinPhasePhoto/);
+ if(!literal)throw new Error('Fastener list is missing');
+ const fasteners=vm.runInNewContext(literal[1]);
+ for(const [,items] of fasteners)for(const [file] of items)checkReference('photos/fasteners/'+file,path.join(root,'index.html'));
+}catch(error){failures.push('Invalid photo fasteners: '+error.message);}
+try{
  vm.runInNewContext(fs.readFileSync(path.join(root,'photos/photos.js'),'utf8'),photoContext);
  for(const entry of [...Object.values(photoContext.window.academyPhotos||{}),...Object.values(photoContext.window.academyServePhotos||{})]){
   const file=typeof entry==='string'?entry:entry.file;

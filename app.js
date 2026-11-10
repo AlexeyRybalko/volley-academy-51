@@ -519,26 +519,31 @@ $('phasePicker').addEventListener('keydown',e=>{if(e.key==='Escape'){e.preventDe
 /* Each phase card shows its photo as a pinned snapshot with its own tilt and fastener. */
 // Real photo fasteners (generated assets in photos/fasteners). Neighbouring phases differ.
 const FASTENERS=[
- ['pin-top',[['pushpin-red-02','fx-pushpin']]],
- ['tape-top',[['tape-masking-01','fx-tape']]],
- ['tacks',[['tack-stamped-silver-02','fx-tack fx-tl'],['tack-stamped-silver-02','fx-tack fx-tr']]],
- ['clear',[['tape-clear-01','fx-clear fx-ctl'],['tape-clear-02','fx-clear fx-ctr']]],
- ['silver',[['pin-flat-silver-01','fx-flat fx-tl'],['pin-flat-silver-01','fx-flat fx-tr']]],
- ['tape-top-2',[['tape-masking-02','fx-tape']]],
- ['pin-top-2',[['pushpin-red-01','fx-pushpin fx-muted']]],
- ['red',[['pin-flat-red-01','fx-flat fx-tl'],['pin-flat-red-01','fx-flat fx-tr']]]
+ ["pin-start", [["pushpin-red-02.65e836b2ac.webp", "fx-pushpin"]]],
+ ["ivory-top", [["tape-masking-03.d30cc4fa62.webp", "fx-tape"]]],
+ ["clear-corners", [["tape-clear-03.d3d5d940a1.webp", "fx-clear fx-ctl"], ["tape-clear-04.66a21e6e3d.webp", "fx-clear fx-ctr"]]],
+ ["beige-top", [["tape-masking-01.27abffbec3.webp", "fx-tape fx-tape-left"]]],
+ ["clear-top", [["tape-clear-02.a6b069455b.webp", "fx-tape fx-tape-clear"]]],
+ ["sand-corners", [["tape-masking-04.c5b789f709.webp", "fx-clear fx-ctl"], ["tape-masking-02.8e00ab34ad.webp", "fx-clear fx-ctr"]]],
+ ["warm-top", [["tape-masking-02.8e00ab34ad.webp", "fx-tape"]]],
+ ["clear-pair", [["tape-clear-01.9f59c5acb6.webp", "fx-clear fx-ctl"], ["tape-clear-03.d3d5d940a1.webp", "fx-clear fx-ctr"]]],
+ ["pin-late", [["pushpin-red-02.65e836b2ac.webp", "fx-pushpin"]]],
+ ["sand-top", [["tape-masking-04.c5b789f709.webp", "fx-tape fx-tape-left"]]],
+ ["clear-fold", [["tape-clear-04.66a21e6e3d.webp", "fx-tape fx-tape-clear"]]],
+ ["ivory-corners", [["tape-masking-03.d30cc4fa62.webp", "fx-clear fx-ctl"], ["tape-masking-01.27abffbec3.webp", "fx-clear fx-ctr"]]],
+ ["clean-top", [["tape-clear-03.d3d5d940a1.webp", "fx-tape fx-tape-clear"]]]
 ];
 function pinPhasePhoto(index){
  const fig=$('phasePhoto');if(!fig)return;
  const tilts=[-2.4,1.8,-1.2,2.8,-2.9,1.3,-1.8,2.3];
  fig.style.setProperty('--tilt',tilts[index%tilts.length]+'deg');
- if(!pinPhasePhoto.preloaded){pinPhasePhoto.preloaded=true;for(const [,items] of FASTENERS)for(const [file] of items){const im=new Image();im.src='photos/fasteners/'+file+'.webp';}}
+ if(!pinPhasePhoto.preloaded){pinPhasePhoto.preloaded=true;const files=new Set(FASTENERS.flatMap(([,items])=>items.map(([file])=>file)));for(const file of files){const im=new Image();im.decoding='async';im.src='photos/fasteners/'+file;}}
  let holder=fig.querySelector('.photo-fastener');
  if(!holder){holder=document.createElement('span');holder.className='photo-fastener';holder.setAttribute('aria-hidden','true');fig.append(holder);}
  const [kind,items]=FASTENERS[index%FASTENERS.length];
  if(holder.dataset.kind===kind)return;
  holder.dataset.kind=kind;
- holder.innerHTML=items.map(([file,cls])=>'<img class="fx '+cls+'" src="photos/fasteners/'+file+'.webp" alt="" decoding="async">').join('');
+ holder.innerHTML=items.map(([file,cls])=>'<img class="fx '+cls+'" src="photos/fasteners/'+file+'" alt="" decoding="async">').join('');
 }
 /* Photos for phases: list files in photos/photos.js. */
 const phasePhotos=[[/^Повторная передача$/,'repeatSet'],[/^Соперник выходит в защиту$/,'opponentDefense'],[/^Контратака$/,'counterattack'],[/^Соперник готовит атаку$/,'opponentPrepare'],[/До подачи/,'ready'],[/^Приём$/,'receive'],[/подач|Сбор у сетки/i,'serve'],[/Касание|Приём соперника/,'dig'],[/передача/i,'set'],[/Блок|защит|готовит/i,'block'],[/Страховка/,'cover'],[/атак/i,'attack'],[/Очко/,'point']];
