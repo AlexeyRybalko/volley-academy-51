@@ -6,8 +6,8 @@
 .phase-popup .phase-photo #phasePhotoImg{border-radius:0;object-fit:contain;object-position:center!important;filter:saturate(.96) contrast(.99) sepia(.025)}
 .phase-popup .phase-photo .photo-placeholder{border-radius:0}
 .phase-popup .phase-photo .photo-fastener{display:none}
-.phase-popup .phase-photo[data-state="ready"]::after{content:"";position:absolute;inset:auto 0 0;height:24px;z-index:2;pointer-events:none;border-radius:0;opacity:1;mix-blend-mode:normal;background:linear-gradient(to bottom,#f4f1ea00,#f4f1ea)}
-.phase-popup .explanation-heading{position:relative;z-index:2;padding:0 var(--photo-gutter);margin-top:-4px}
+.phase-popup .phase-photo[data-state="ready"]::after{content:"";position:absolute;inset:auto 0 0;height:clamp(52px,16%,76px);z-index:2;pointer-events:none;border-radius:0;opacity:1;mix-blend-mode:normal;background:linear-gradient(to bottom,#f4f1ea00 0%,#f4f1ea06 20%,#f4f1ea1a 36%,#f4f1ea47 52%,#f4f1ea8c 68%,#f4f1ead1 84%,#f4f1ea 100%)}
+.phase-popup .explanation-heading{position:relative;z-index:2;padding:0 var(--photo-gutter);margin-top:-14px}
 .phase-popup .explanation-heading h2{margin:0 0 10px;line-height:1.12}
 .phase-popup #explainText{padding:0 var(--photo-gutter);margin:0}
 .phase-popup #playerText{margin:10px var(--photo-gutter) 0;padding:10px 0 0}
