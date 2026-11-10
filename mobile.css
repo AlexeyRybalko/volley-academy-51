@@ -77,6 +77,20 @@
  .notes,.rules-grid,.practice{min-width:0;max-width:100%}.rules-grid>*{min-width:0}.rule-pic{max-width:100%}
  footer{width:100%;min-width:0;padding-inline:8px;gap:10px;overflow-wrap:anywhere}
  dialog,.quiz-dialog{max-width:calc(100vw - 24px);max-height:calc(100dvh - 24px);padding:20px 16px;overflow-x:hidden}
+ /* Count the top margin inside the viewport budget, including phone safe areas. */
+ .quiz-dialog[open]{--quiz-top:max(10px,env(safe-area-inset-top,0px));--quiz-bottom:max(10px,env(safe-area-inset-bottom,0px));margin:var(--quiz-top) auto 0;width:calc(100% - 20px);max-width:520px;max-height:calc(100vh - var(--quiz-top) - var(--quiz-bottom));max-height:calc(100dvh - var(--quiz-top) - var(--quiz-bottom));padding:16px 14px;overflow-y:auto;overscroll-behavior:contain}
+ .quiz-dialog .quiz-top{align-items:center;gap:10px;padding-right:30px}
+ .quiz-dialog .quiz-top .eyebrow{margin:0;font-size:11px;letter-spacing:1px}
+ .quiz-dialog .quiz-progress{font-size:13px;white-space:nowrap}
+ .quiz-dialog h2{font-size:23px;margin-bottom:10px}
+ .quiz-dialog .quiz-question{font-size:16px;line-height:1.4;margin-bottom:12px}
+ .quiz-dialog .quiz-court{height:clamp(140px,30dvh,230px);width:auto;max-width:100%}
+ .quiz-dialog .quiz-option{font-size:15px;line-height:1.35;padding:10px 12px;min-height:44px}
+ .quiz-dialog .quiz-hint{font-size:12px}
+ .quiz-dialog .quiz-feedback{margin-top:12px}
+ .quiz-dialog .quiz-feedback p:not(.quiz-verdict){font-size:14px;line-height:1.45}
+ .quiz-dialog .quiz-actions{gap:8px;margin-top:12px}
+ .quiz-dialog .quiz-actions button{min-height:44px;font-size:15px;padding:10px 12px}
  .workspace:fullscreen{height:100dvh;max-height:100dvh;overflow-y:auto;overflow-x:hidden;border-radius:0;overscroll-behavior:contain}
  .workspace:fullscreen .board-panel{height:auto;flex:none;overflow:visible}.workspace:fullscreen .court-stage .court-wrap{display:block;height:auto}
  .vertical-court .workspace:fullscreen #court,.workspace:fullscreen #court{width:100%;height:auto;min-width:0;max-width:100%;max-height:64dvh;aspect-ratio:820/860}
