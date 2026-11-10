@@ -134,3 +134,18 @@ header{flex-wrap:wrap;gap:14px 24px}
 /* A gentle print treatment: the action stays clear and the original files stay intact. */
 .phase-popup .phase-photo #phasePhotoImg{filter:saturate(.9) contrast(.98) sepia(.08) brightness(1.02)}
 .phase-popup .phase-photo[data-state="ready"]::after{content:"";position:absolute;inset:0;z-index:2;pointer-events:none;border-radius:1px;opacity:.075;mix-blend-mode:multiply;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.82' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Cpath fill='%23808080' filter='url%28%23n%29' d='M0 0h180v180H0z'/%3E%3C/svg%3E")}
+
+/* Compact phone cards: no empty space reserved for other rally phases. */
+@media(max-width:860px){
+ .workspace>.phase-popup{height:auto;min-height:0;max-height:none;padding:12px;margin:0 10px 12px}
+ .phase-popup .phase-body,.phase-popup .phase-content{flex:0 0 auto;min-height:0;overflow:visible}
+ .phase-popup .explanation-heading{min-height:0}
+ .phase-popup h2{font-size:22px;line-height:1.15;margin:6px 0 0}
+ .phase-popup .phase-photo{width:calc(100% - 36px);max-width:250px;margin:24px auto 12px;border-width:5px;border-bottom-width:7px;--fx:.86}
+ .phase-popup p{font-size:14px;line-height:1.45}
+ .phase-popup #playerText:empty{display:none}
+ .phase-popup .phase-footer{padding-top:10px}
+ .phase-popup .phase-nav{gap:8px}
+ .phase-popup .phase-nav button{min-height:40px;padding:8px;font-size:14px}
+ .phase-popup .all-phases-button{min-height:38px;padding:8px 10px;margin-top:8px}
+}

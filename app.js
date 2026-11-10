@@ -372,33 +372,14 @@ function playerInfoFor(a,t=state.time){
  return info;
 }
 
-/* Phones: the phase card keeps one height for the whole rally (the tallest phase),
-   so "Назад" and "Дальше" never jump under the finger and nothing scrolls inside. */
-let stabKey='';
-function stabilizePhaseCard(force){
- const popup=$('phasePopup'),content=$('phaseContent'),heading=popup&&popup.querySelector('.explanation-heading');
- if(!content||!frames||!frames.length)return;
- const mobile=window.matchMedia('(max-width: 860px)').matches;
- if(!mobile){if(stabKey){content.style.minHeight='';if(heading)heading.style.minHeight='';stabKey='';}return;}
- if(popup.hidden||popup.classList.contains('choosing-phase')||!content.clientWidth)return;
- const key=[state.rotation,state.mode,state.auto,state.selected,state.selectedTeam,state.orientation,state.quality,state.attack,state.opponentAttack,state.opponentRotation,state.firstBall,state.opponentFirstBall,state.serveGroup,content.clientWidth,frames.length].join('|');
- if(key===stabKey&&!force)return;
- const title=$('explainTitle'),text=$('explainText'),player=$('playerText');
- const saved=[title.textContent,text.innerHTML,player.innerHTML];
- content.style.minHeight='';if(heading)heading.style.minHeight='';
- let maxContent=0,maxHeading=0;
- for(const f of frames){
-  title.textContent=window.volleyTypography?window.volleyTypography(f.title):f.title;
-  setRoleText(text,f.explain);setRoleText(player,playerInfoFor(f,f.t));
-  maxContent=Math.max(maxContent,content.scrollHeight);
-  if(heading)maxHeading=Math.max(maxHeading,heading.offsetHeight);
- }
- title.textContent=saved[0];text.innerHTML=saved[1];player.innerHTML=saved[2];
- content.style.minHeight=maxContent+'px';if(heading)heading.style.minHeight=maxHeading+'px';
- stabKey=key;
+/* Mobile cards follow their current content; the photo frame still reserves image space. */
+function stabilizePhaseCard(){
+ const content=$('phaseContent'),heading=$('phasePopup')?.querySelector('.explanation-heading');
+ if(content)content.style.minHeight='';
+ if(heading)heading.style.minHeight='';
 }
-window.addEventListener('resize',()=>{clearTimeout(stabilizePhaseCard.t);stabilizePhaseCard.t=setTimeout(()=>stabilizePhaseCard(true),150);});
-window.matchMedia?.('(max-width: 860px)').addEventListener?.('change',()=>stabilizePhaseCard(true));
+window.addEventListener('resize',stabilizePhaseCard);
+window.matchMedia?.('(max-width: 860px)').addEventListener?.('change',stabilizePhaseCard);
 function tick(now){if(!last)last=now;const dt=Math.min((now-last)/1000,.1);last=now;if(state.playing){if(state.auto)seek((state.cycleTime+dt*state.speed)%cycleDuration);else{state.time=Math.min(rallyDuration,state.time+dt*state.speed);if(state.time>=rallyDuration)pause();render();}}else if(blend||hoverPlayer)render();requestAnimationFrame(tick);}
 $('play').onclick=toggle;$('reset').onclick=()=>{pause();seek(0);};$('timeline').oninput=e=>{pause();seek(+e.target.value);};$('speed').onchange=e=>state.speed=+e.target.value;
 for(const mode of ['receive','serve'])$(mode).onclick=()=>{if(state.auto)seek(Math.min(5,Math.floor(state.cycleTime/40))*40+(mode==='receive'?20:0));else{state.mode=mode;restart();}};
