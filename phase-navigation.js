@@ -3,6 +3,7 @@
  'use strict';
  const popup=document.getElementById('phasePopup'),footer=popup?.querySelector('.phase-footer');
  if(!popup||!footer)return;
+ document.getElementById('workspace')?.classList.add('phase-navigation-ready');
  const slot=document.createElement('div');slot.className='phase-footer-slot';
  footer.before(slot);slot.append(footer);
  let scheduled=false;
@@ -10,7 +11,7 @@
  function update(){
   scheduled=false;
   const rect=popup.getBoundingClientRect();
-  const dock=!popup.hidden&&!popup.classList.contains('choosing-phase')&&rect.width>0&&rect.bottom>140&&rect.top<window.innerHeight-180;
+  const dock=!popup.hidden&&popup.getAttribute('aria-busy')!=='true'&&!popup.classList.contains('choosing-phase')&&rect.width>0&&rect.bottom>140&&rect.top<window.innerHeight-180;
   if(dock){
    const transport=document.querySelector('.transport');
    const bottom=mobile.matches?12:(transport?.offsetHeight||100)+16;

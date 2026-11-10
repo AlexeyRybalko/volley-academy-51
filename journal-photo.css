@@ -49,3 +49,6 @@
 .phase-footer-slot{flex:none;min-width:0}
 .phase-popup.nav-docked .phase-footer{position:fixed;left:var(--phase-nav-left);width:var(--phase-nav-width);bottom:calc(var(--phase-nav-bottom,12px) + env(safe-area-inset-bottom,0px));z-index:20;box-sizing:border-box;margin:0;padding:12px var(--photo-gutter) 14px;border:1px solid #d4cfc4;border-radius:10px;background:#f4f1ea;box-shadow:0 5px 22px #0003;transition:none}
 @media(max-width:860px){.phase-popup.nav-docked .phase-footer{padding-top:10px;padding-bottom:12px}}
+/* An animated transform must not become the fixed toolbar's containing block. */
+#workspace.phase-navigation-ready{animation:none;transform:none}
+.phase-popup.nav-docked{transform:none!important}
