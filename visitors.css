@@ -89,9 +89,3 @@ header{flex-wrap:wrap;gap:14px 24px}
  .transport .scrubber{order:-1;flex:0 0 100%;width:100%;box-sizing:border-box}
 }
 
-/* Phase photo melts into the card: no frame, soft oval vignette into the cream background */
-.phase-popup .phase-photo{border-radius:0;background:transparent;box-shadow:none;
- -webkit-mask-image:radial-gradient(ellipse 62% 60% at 50% 49%,#000 46%,rgba(0,0,0,.6) 72%,transparent 100%);
- mask-image:radial-gradient(ellipse 62% 60% at 50% 49%,#000 46%,rgba(0,0,0,.6) 72%,transparent 100%)}
-.phase-popup .photo-placeholder{background:radial-gradient(ellipse at 50% 45%,#e4ddd0,#f4f1ea 75%)}
-.phase-popup .phase-photo img{filter:saturate(.96) contrast(1.02)}
