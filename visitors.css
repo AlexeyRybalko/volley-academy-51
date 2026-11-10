@@ -89,63 +89,9 @@ header{flex-wrap:wrap;gap:14px 24px}
  .transport .scrubber{order:-1;flex:0 0 100%;width:100%;box-sizing:border-box}
 }
 
-/* Phase photo as a snapshot pinned into the coach's notebook: white border, soft shadow,
-   its own tilt for every phase, held by transparent tape or the Academy red pushpin */
-.phase-popup .phase-photo{overflow:visible;border:7px solid #fffdf8;border-bottom-width:9px;border-radius:2px;background:#fffdf8;box-sizing:border-box;
- box-shadow:0 1px 2px #0002,0 8px 18px -6px #0004,0 18px 28px -18px #0003;rotate:var(--tilt,-1.5deg);transition:rotate .45s cubic-bezier(.3,1.3,.5,1)}
-.phase-popup .phase-photo img,.phase-popup .photo-placeholder{border-radius:1px}
-.phase-popup .phase-photo img{filter:saturate(.97) contrast(1.02)}
-.phase-popup .photo-placeholder{background:linear-gradient(135deg,#e7e1d6,#f0ebe2)}
-.photo-fastener{position:absolute;inset:0;z-index:3;pointer-events:none}
-@media(prefers-reduced-motion:reduce){.phase-popup .phase-photo{transition:none}}
-/* Room for the pin and tapes so the card never clips them (tilt included) */
-.phase-popup .phase-photo{margin-top:32px}
-@media(min-height:1001px),(max-width:860px){.phase-popup .phase-photo{width:calc(100% - 48px);margin-left:auto;margin-right:auto;margin-bottom:16px}}
-@media(max-height:1000px) and (min-width:861px){.phase-popup .phase-photo{margin:28px 22px 10px 16px}}
-.photo-fastener[data-kind="pin"]{top:-15px}
-.photo-fastener[data-kind="tape"]{top:-13px}
-.photo-fastener[data-kind="corners"]::before{left:-9px;top:-4px}
-.photo-fastener[data-kind="corners"]::after{right:-9px;top:-4px}
-
-/* Fasteners from image assets (photos/fasteners); sizes scale with the photo via --fx */
-.phase-popup .phase-photo{--fx:1}
-@media(max-height:1000px) and (min-width:861px){.phase-popup .phase-photo{--fx:.72}}
-.photo-fastener{inset:0}
-.phase-popup .photo-fastener img.fx{position:absolute;inset:auto;display:block;height:auto;max-width:none;max-height:none;opacity:1;object-fit:fill;filter:none;border-radius:0;transition:none;pointer-events:none;user-select:none}
-.phase-popup .photo-fastener img.fx-pushpin{width:calc(42px * var(--fx));top:calc(-31px * var(--fx));left:50%;margin-left:calc(-16px * var(--fx));rotate:6deg}
-.phase-popup .photo-fastener img.fx-tape{width:calc(124px * var(--fx));top:calc(-13px * var(--fx));left:50%;margin-left:calc(-62px * var(--fx));rotate:-3deg;opacity:.96}
-.phase-popup .photo-fastener img.fx-tack{width:calc(34px * var(--fx))}
-.phase-popup .photo-fastener img.fx-flat{width:calc(28px * var(--fx))}
-.phase-popup .photo-fastener img.fx-tl{top:calc(-4px * var(--fx));left:calc(-4px * var(--fx))}
-.phase-popup .photo-fastener img.fx-tr{top:calc(-4px * var(--fx));right:calc(-4px * var(--fx))}
-.phase-popup .photo-fastener img.fx-clear{width:calc(78px * var(--fx));opacity:.95}
-.phase-popup .photo-fastener img.fx-ctl{top:calc(-2px * var(--fx));left:calc(-20px * var(--fx));rotate:-40deg}
-.phase-popup .photo-fastener img.fx-ctr{top:calc(-2px * var(--fx));right:calc(-20px * var(--fx));rotate:40deg}
-.phase-popup .photo-fastener img.fx-muted{filter:saturate(.62) brightness(.9) contrast(1.02)}
-
-/* Real tape straddles the paper edge; only two phases use a centered red pin. */
-.phase-popup .photo-fastener img.fx-pushpin{width:calc(60px * var(--fx));top:calc(-34px * var(--fx));left:50%;margin:0;translate:-50% 0;rotate:0deg}
-.phase-popup .photo-fastener img.fx-tape{width:calc(150px * var(--fx));top:calc(-26px * var(--fx));left:50%;margin:0;translate:-50% 0;rotate:-2deg;opacity:1}
-.phase-popup .photo-fastener img.fx-tape-left{left:44%;rotate:3deg}
-.phase-popup .photo-fastener img.fx-tape-clear{width:calc(112px * var(--fx));top:calc(-30px * var(--fx));rotate:1deg}
-.phase-popup .photo-fastener img.fx-clear{width:calc(94px * var(--fx));opacity:1}
-.phase-popup .photo-fastener img.fx-ctl{top:calc(-20px * var(--fx));left:calc(-24px * var(--fx));rotate:-34deg}
-.phase-popup .photo-fastener img.fx-ctr{top:calc(-20px * var(--fx));right:calc(-24px * var(--fx));rotate:34deg}
-/* A gentle print treatment: the action stays clear and the original files stay intact. */
-.phase-popup .phase-photo #phasePhotoImg{filter:saturate(.9) contrast(.98) sepia(.08) brightness(1.02)}
-.phase-popup .phase-photo[data-state="ready"]::after{content:"";position:absolute;inset:0;z-index:2;pointer-events:none;border-radius:1px;opacity:.075;mix-blend-mode:multiply;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.82' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Cpath fill='%23808080' filter='url%28%23n%29' d='M0 0h180v180H0z'/%3E%3C/svg%3E")}
-
-/* Compact phone cards: no empty space reserved for other rally phases. */
-@media(max-width:860px){
- .workspace>.phase-popup{height:auto;min-height:0;max-height:none;padding:12px;margin:0 10px 12px}
- .phase-popup .phase-body,.phase-popup .phase-content{flex:0 0 auto;min-height:0;overflow:visible}
- .phase-popup .explanation-heading{min-height:0}
- .phase-popup h2{font-size:22px;line-height:1.15;margin:6px 0 0}
- .phase-popup .phase-photo{width:calc(100% - 36px);max-width:250px;margin:24px auto 12px;border-width:5px;border-bottom-width:7px;--fx:.86}
- .phase-popup p{font-size:14px;line-height:1.45}
- .phase-popup #playerText:empty{display:none}
- .phase-popup .phase-footer{padding-top:10px}
- .phase-popup .phase-nav{gap:8px}
- .phase-popup .phase-nav button{min-height:40px;padding:8px;font-size:14px}
- .phase-popup .all-phases-button{min-height:38px;padding:8px 10px;margin-top:8px}
-}
+/* Phase photo melts into the card: no frame, soft oval vignette into the cream background */
+.phase-popup .phase-photo{border-radius:0;background:transparent;box-shadow:none;
+ -webkit-mask-image:radial-gradient(ellipse 62% 60% at 50% 49%,#000 46%,rgba(0,0,0,.6) 72%,transparent 100%);
+ mask-image:radial-gradient(ellipse 62% 60% at 50% 49%,#000 46%,rgba(0,0,0,.6) 72%,transparent 100%)}
+.phase-popup .photo-placeholder{background:radial-gradient(ellipse at 50% 45%,#e4ddd0,#f4f1ea 75%)}
+.phase-popup .phase-photo img{filter:saturate(.96) contrast(1.02)}

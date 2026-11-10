@@ -372,14 +372,33 @@ function playerInfoFor(a,t=state.time){
  return info;
 }
 
-/* Mobile cards follow their current content; the photo frame still reserves image space. */
-function stabilizePhaseCard(){
- const content=$('phaseContent'),heading=$('phasePopup')?.querySelector('.explanation-heading');
- if(content)content.style.minHeight='';
- if(heading)heading.style.minHeight='';
+/* Phones: the phase card keeps one height for the whole rally (the tallest phase),
+   so "Назад" and "Дальше" never jump under the finger and nothing scrolls inside. */
+let stabKey='';
+function stabilizePhaseCard(force){
+ const popup=$('phasePopup'),content=$('phaseContent'),heading=popup&&popup.querySelector('.explanation-heading');
+ if(!content||!frames||!frames.length)return;
+ const mobile=window.matchMedia('(max-width: 860px)').matches;
+ if(!mobile){if(stabKey){content.style.minHeight='';if(heading)heading.style.minHeight='';stabKey='';}return;}
+ if(popup.hidden||popup.classList.contains('choosing-phase')||!content.clientWidth)return;
+ const key=[state.rotation,state.mode,state.auto,state.selected,state.selectedTeam,state.orientation,state.quality,state.attack,state.opponentAttack,state.opponentRotation,state.firstBall,state.opponentFirstBall,state.serveGroup,content.clientWidth,frames.length].join('|');
+ if(key===stabKey&&!force)return;
+ const title=$('explainTitle'),text=$('explainText'),player=$('playerText');
+ const saved=[title.textContent,text.innerHTML,player.innerHTML];
+ content.style.minHeight='';if(heading)heading.style.minHeight='';
+ let maxContent=0,maxHeading=0;
+ for(const f of frames){
+  title.textContent=window.volleyTypography?window.volleyTypography(f.title):f.title;
+  setRoleText(text,f.explain);setRoleText(player,playerInfoFor(f,f.t));
+  maxContent=Math.max(maxContent,content.scrollHeight);
+  if(heading)maxHeading=Math.max(maxHeading,heading.offsetHeight);
+ }
+ title.textContent=saved[0];text.innerHTML=saved[1];player.innerHTML=saved[2];
+ content.style.minHeight=maxContent+'px';if(heading)heading.style.minHeight=maxHeading+'px';
+ stabKey=key;
 }
-window.addEventListener('resize',stabilizePhaseCard);
-window.matchMedia?.('(max-width: 860px)').addEventListener?.('change',stabilizePhaseCard);
+window.addEventListener('resize',()=>{clearTimeout(stabilizePhaseCard.t);stabilizePhaseCard.t=setTimeout(()=>stabilizePhaseCard(true),150);});
+window.matchMedia?.('(max-width: 860px)').addEventListener?.('change',()=>stabilizePhaseCard(true));
 function tick(now){if(!last)last=now;const dt=Math.min((now-last)/1000,.1);last=now;if(state.playing){if(state.auto)seek((state.cycleTime+dt*state.speed)%cycleDuration);else{state.time=Math.min(rallyDuration,state.time+dt*state.speed);if(state.time>=rallyDuration)pause();render();}}else if(blend||hoverPlayer)render();requestAnimationFrame(tick);}
 $('play').onclick=toggle;$('reset').onclick=()=>{pause();seek(0);};$('timeline').oninput=e=>{pause();seek(+e.target.value);};$('speed').onchange=e=>state.speed=+e.target.value;
 for(const mode of ['receive','serve'])$(mode).onclick=()=>{if(state.auto)seek(Math.min(5,Math.floor(state.cycleTime/40))*40+(mode==='receive'?20:0));else{state.mode=mode;restart();}};
@@ -479,7 +498,7 @@ async function animatePhaseView(elements,enter){
 async function setPhasePicker(open,onReveal){
  if(phasePickerBusy)return;
  phasePickerBusy=true;
- const popup=$('phasePopup'),picker=$('phasePicker'),card=[popup.querySelector('.phase-body')];
+ const popup=$('phasePopup'),picker=$('phasePicker'),card=[popup.querySelector('.explanation-heading'),popup.querySelector('.phase-body')];
  popup.setAttribute('aria-busy','true');
  try{
   await animatePhaseView(open?card:[picker],false);
@@ -496,36 +515,6 @@ $('showPhasePicker').onclick=()=>{pause();setPhasePicker(true);};
 $('closePhasePicker').onclick=()=>setPhasePicker(false);
 $('phasePicker').addEventListener('keydown',e=>{if(e.key==='Escape'){e.preventDefault();setPhasePicker(false);}});
 
-
-/* Each phase card shows its photo as a pinned snapshot with its own tilt and fastener. */
-// Real photo fasteners (generated assets in photos/fasteners). Neighbouring phases differ.
-const FASTENERS=[
- ["pin-start", [["pushpin-red-02.65e836b2ac.webp", "fx-pushpin"]]],
- ["ivory-top", [["tape-masking-03.d30cc4fa62.webp", "fx-tape"]]],
- ["clear-corners", [["tape-clear-03.d3d5d940a1.webp", "fx-clear fx-ctl"], ["tape-clear-04.66a21e6e3d.webp", "fx-clear fx-ctr"]]],
- ["beige-top", [["tape-masking-01.27abffbec3.webp", "fx-tape fx-tape-left"]]],
- ["clear-top", [["tape-clear-02.a6b069455b.webp", "fx-tape fx-tape-clear"]]],
- ["sand-corners", [["tape-masking-04.c5b789f709.webp", "fx-clear fx-ctl"], ["tape-masking-02.8e00ab34ad.webp", "fx-clear fx-ctr"]]],
- ["warm-top", [["tape-masking-02.8e00ab34ad.webp", "fx-tape"]]],
- ["clear-pair", [["tape-clear-01.9f59c5acb6.webp", "fx-clear fx-ctl"], ["tape-clear-03.d3d5d940a1.webp", "fx-clear fx-ctr"]]],
- ["pin-late", [["pushpin-red-02.65e836b2ac.webp", "fx-pushpin"]]],
- ["sand-top", [["tape-masking-04.c5b789f709.webp", "fx-tape fx-tape-left"]]],
- ["clear-fold", [["tape-clear-04.66a21e6e3d.webp", "fx-tape fx-tape-clear"]]],
- ["ivory-corners", [["tape-masking-03.d30cc4fa62.webp", "fx-clear fx-ctl"], ["tape-masking-01.27abffbec3.webp", "fx-clear fx-ctr"]]],
- ["clean-top", [["tape-clear-03.d3d5d940a1.webp", "fx-tape fx-tape-clear"]]]
-];
-function pinPhasePhoto(index){
- const fig=$('phasePhoto');if(!fig)return;
- const tilts=[-2.4,1.8,-1.2,2.8,-2.9,1.3,-1.8,2.3];
- fig.style.setProperty('--tilt',tilts[index%tilts.length]+'deg');
- if(!pinPhasePhoto.preloaded){pinPhasePhoto.preloaded=true;const files=new Set(FASTENERS.flatMap(([,items])=>items.map(([file])=>file)));for(const file of files){const im=new Image();im.decoding='async';im.src='photos/fasteners/'+file;}}
- let holder=fig.querySelector('.photo-fastener');
- if(!holder){holder=document.createElement('span');holder.className='photo-fastener';holder.setAttribute('aria-hidden','true');fig.append(holder);}
- const [kind,items]=FASTENERS[index%FASTENERS.length];
- if(holder.dataset.kind===kind)return;
- holder.dataset.kind=kind;
- holder.innerHTML=items.map(([file,cls])=>'<img class="fx '+cls+'" src="photos/fasteners/'+file+'" alt="" decoding="async">').join('');
-}
 /* Photos for phases: list files in photos/photos.js. */
 const phasePhotos=[[/^Повторная передача$/,'repeatSet'],[/^Соперник выходит в защиту$/,'opponentDefense'],[/^Контратака$/,'counterattack'],[/^Соперник готовит атаку$/,'opponentPrepare'],[/До подачи/,'ready'],[/^Приём$/,'receive'],[/подач|Сбор у сетки/i,'serve'],[/Касание|Приём соперника/,'dig'],[/передача/i,'set'],[/Блок|защит|готовит/i,'block'],[/Страховка/,'cover'],[/атак/i,'attack'],[/Очко/,'point']];
 const phasePhotoCache=new Map();
@@ -551,7 +540,6 @@ function showPhasePhoto(title,nextTitle){
  if(!file){setPhotoState('error');return;}
  const src='photos/'+file,cap=$('phasePhotoCredit');
  img.style.objectPosition=entry.position||'50% 50%';img.alt=entry.alt||title;
- fig.style.setProperty('--photo-ratio',entry.width&&entry.height?entry.width+'/'+entry.height:'4/5');
  if(cap)cap.hidden=!entry.credit;
  if(cap){cap.replaceChildren();if(entry.credit){const l=document.createElement(entry.source?'a':'span');l.textContent='Фото: '+entry.credit;if(entry.source){l.href=entry.source;l.target='_blank';l.rel='noreferrer';}cap.append(l);}}
  img.title=entry&&entry.credit?'Фото: '+entry.credit:'';
