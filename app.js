@@ -434,7 +434,7 @@ $('labels').onchange=e=>{document.body.classList.toggle('no-labels',!e.target.ch
 $('solo').onchange=e=>{state.solo=e.target.checked;if(state.solo&&!state.selected)state.selected='s';updateControls();render();};
 $('clear').onclick=()=>{state.selected=null;state.solo=false;$('solo').checked=false;updateControls();render();};
 $('help').onclick=()=>$('helpDialog').showModal();for(const id of ['closeHelp','startHelp'])$(id).onclick=()=>$('helpDialog').close();
-document.addEventListener('keydown',e=>{if($('helpDialog').open||['INPUT','SELECT','BUTTON','A'].includes(document.activeElement.tagName)||document.activeElement.closest('.player-node'))return;if(e.code==='Space'){e.preventDefault();toggle();}if(e.key==='ArrowRight'||e.key==='ArrowLeft'){e.preventDefault();pause();seek((state.auto?state.cycleTime:state.time)+(e.key==='ArrowRight'?.5:-.5));}});
+document.addEventListener('keydown',e=>{if($('helpDialog').open||['INPUT','SELECT','BUTTON','A','SUMMARY'].includes(document.activeElement.tagName)||document.activeElement.closest('.player-node'))return;if(e.code==='Space'){e.preventDefault();toggle();}if(e.key==='ArrowRight'||e.key==='ArrowLeft'){e.preventDefault();pause();seek((state.auto?state.cycleTime:state.time)+(e.key==='ArrowRight'?.5:-.5));}});
 $('opponentRotation').onchange=e=>{state.opponentRotation=+e.target.value;restart();};
 $('teamHome').onclick=()=>{state.rosterTeam='home';updateControls();};$('teamAway').onclick=()=>{state.rosterTeam='away';updateControls();};
 $('fullscreen').onclick=()=>{const workspace=$('workspace');if(document.fullscreenElement)document.exitFullscreen();else if(workspace.requestFullscreen)workspace.requestFullscreen({navigationUI:'hide'}).catch(()=>{});};
