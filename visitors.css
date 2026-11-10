@@ -108,3 +108,27 @@ header{flex-wrap:wrap;gap:14px 24px}
 .photo-fastener[data-kind="corners"]::before{top:-6px;left:-20px;rotate:-38deg}
 .photo-fastener[data-kind="corners"]::after{top:-6px;right:-20px;rotate:38deg}
 @media(prefers-reduced-motion:reduce){.phase-popup .phase-photo{transition:none}}
+/* Room for the pin and tapes so the card never clips them (tilt included) */
+.phase-popup .phase-photo{margin-top:32px}
+@media(min-height:1001px),(max-width:860px){.phase-popup .phase-photo{width:calc(100% - 48px);margin-left:auto;margin-right:auto;margin-bottom:16px}}
+@media(max-height:1000px) and (min-width:861px){.phase-popup .phase-photo{margin:28px 22px 10px 16px}}
+.photo-fastener[data-kind="pin"]{top:-15px}
+.photo-fastener[data-kind="tape"]{top:-13px}
+.photo-fastener[data-kind="corners"]::before{left:-9px;top:-4px}
+.photo-fastener[data-kind="corners"]::after{right:-9px;top:-4px}
+
+/* Fasteners from image assets (photos/fasteners); sizes scale with the photo via --fx */
+.phase-popup .phase-photo{--fx:1}
+@media(max-height:1000px) and (min-width:861px){.phase-popup .phase-photo{--fx:.72}}
+.photo-fastener{inset:0}
+.phase-popup .photo-fastener img.fx{position:absolute;inset:auto;display:block;height:auto;max-width:none;max-height:none;opacity:1;object-fit:fill;filter:none;border-radius:0;transition:none;pointer-events:none;user-select:none}
+.phase-popup .photo-fastener img.fx-pushpin{width:calc(42px * var(--fx));top:calc(-31px * var(--fx));left:50%;margin-left:calc(-16px * var(--fx));rotate:6deg}
+.phase-popup .photo-fastener img.fx-tape{width:calc(124px * var(--fx));top:calc(-13px * var(--fx));left:50%;margin-left:calc(-62px * var(--fx));rotate:-3deg;opacity:.96}
+.phase-popup .photo-fastener img.fx-tack{width:calc(34px * var(--fx))}
+.phase-popup .photo-fastener img.fx-flat{width:calc(28px * var(--fx))}
+.phase-popup .photo-fastener img.fx-tl{top:calc(-4px * var(--fx));left:calc(-4px * var(--fx))}
+.phase-popup .photo-fastener img.fx-tr{top:calc(-4px * var(--fx));right:calc(-4px * var(--fx))}
+.phase-popup .photo-fastener img.fx-clear{width:calc(78px * var(--fx));opacity:.95}
+.phase-popup .photo-fastener img.fx-ctl{top:calc(-2px * var(--fx));left:calc(-20px * var(--fx));rotate:-40deg}
+.phase-popup .photo-fastener img.fx-ctr{top:calc(-2px * var(--fx));right:calc(-20px * var(--fx));rotate:40deg}
+.phase-popup .photo-fastener img.fx-muted{filter:saturate(.62) brightness(.9) contrast(1.02)}

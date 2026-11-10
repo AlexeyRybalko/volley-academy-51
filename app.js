@@ -517,19 +517,28 @@ $('phasePicker').addEventListener('keydown',e=>{if(e.key==='Escape'){e.preventDe
 
 
 /* Each phase card shows its photo as a pinned snapshot with its own tilt and fastener. */
-const PIN_SVG='<svg viewBox="0 0 30 34" aria-hidden="true"><defs><radialGradient id="pinHead" cx="38%" cy="32%" r="70%"><stop offset="0" stop-color="#ef7d82"/><stop offset=".55" stop-color="#c4474d"/><stop offset="1" stop-color="#8e2a30"/></radialGradient></defs>'
- +'<ellipse cx="19" cy="31" rx="6.5" ry="2.2" fill="#0003"/><path d="M15 18 19.5 30" stroke="#9aa0a8" stroke-width="1.7" stroke-linecap="round"/>'
- +'<ellipse cx="15" cy="16.5" rx="7" ry="2.6" fill="#8e2a30"/><path d="M10 9.5h10v6.8H10z" fill="#b03a40"/><circle cx="15" cy="10" r="8.5" fill="url(#pinHead)"/><ellipse cx="12" cy="7" rx="3" ry="2" fill="#fff" opacity=".55"/></svg>';
+// Real photo fasteners (generated assets in photos/fasteners). Neighbouring phases differ.
+const FASTENERS=[
+ ['pin-top',[['pushpin-red-02','fx-pushpin']]],
+ ['tape-top',[['tape-masking-01','fx-tape']]],
+ ['tacks',[['tack-stamped-silver-02','fx-tack fx-tl'],['tack-stamped-silver-02','fx-tack fx-tr']]],
+ ['clear',[['tape-clear-01','fx-clear fx-ctl'],['tape-clear-02','fx-clear fx-ctr']]],
+ ['silver',[['pin-flat-silver-01','fx-flat fx-tl'],['pin-flat-silver-01','fx-flat fx-tr']]],
+ ['tape-top-2',[['tape-masking-02','fx-tape']]],
+ ['pin-top-2',[['pushpin-red-01','fx-pushpin fx-muted']]],
+ ['red',[['pin-flat-red-01','fx-flat fx-tl'],['pin-flat-red-01','fx-flat fx-tr']]]
+];
 function pinPhasePhoto(index){
  const fig=$('phasePhoto');if(!fig)return;
- // Neighbouring phases always lean opposite ways and use different fasteners.
  const tilts=[-2.4,1.8,-1.2,2.8,-2.9,1.3,-1.8,2.3];
- const kinds=['pin','tape','pin','corners'];
  fig.style.setProperty('--tilt',tilts[index%tilts.length]+'deg');
- let pin=fig.querySelector('.photo-fastener');
- if(!pin){pin=document.createElement('span');pin.className='photo-fastener';pin.setAttribute('aria-hidden','true');fig.append(pin);}
- const kind=kinds[index%kinds.length];
- if(pin.dataset.kind!==kind){pin.dataset.kind=kind;pin.innerHTML=kind==='pin'?PIN_SVG:'';}
+ if(!pinPhasePhoto.preloaded){pinPhasePhoto.preloaded=true;for(const [,items] of FASTENERS)for(const [file] of items){const im=new Image();im.src='photos/fasteners/'+file+'.webp';}}
+ let holder=fig.querySelector('.photo-fastener');
+ if(!holder){holder=document.createElement('span');holder.className='photo-fastener';holder.setAttribute('aria-hidden','true');fig.append(holder);}
+ const [kind,items]=FASTENERS[index%FASTENERS.length];
+ if(holder.dataset.kind===kind)return;
+ holder.dataset.kind=kind;
+ holder.innerHTML=items.map(([file,cls])=>'<img class="fx '+cls+'" src="photos/fasteners/'+file+'.webp" alt="" decoding="async">').join('');
 }
 /* Photos for phases: list files in photos/photos.js. */
 const phasePhotos=[[/^Повторная передача$/,'repeatSet'],[/^Соперник выходит в защиту$/,'opponentDefense'],[/^Контратака$/,'counterattack'],[/^Соперник готовит атаку$/,'opponentPrepare'],[/До подачи/,'ready'],[/^Приём$/,'receive'],[/подач|Сбор у сетки/i,'serve'],[/Касание|Приём соперника/,'dig'],[/передача/i,'set'],[/Блок|защит|готовит/i,'block'],[/Страховка/,'cover'],[/атак/i,'attack'],[/Очко/,'point']];
