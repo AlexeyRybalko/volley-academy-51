@@ -405,22 +405,10 @@ function stabilizePhaseCard(force){
   desktopFitKey=key;return;
  }
  desktopFitKey='';
- if(popup.hidden||popup.classList.contains('choosing-phase')||!content.clientWidth)return;
- const key=[content.clientWidth,content.clientHeight,$('explainTitle').textContent,$('explainText').innerHTML,$('playerText').innerHTML].join('|');
- if(key===stabKey&&!force)return;
  content.style.minHeight='';if(heading)heading.style.minHeight='';
  const photo=$('phasePhoto');content.classList.remove('compact-copy','tight-copy');
- for(const size of ['', 'compact-copy','tight-copy']){
-  if(size)content.classList.add(size);
-  photo.style.height='';let height=photo.getBoundingClientRect().height;
-  const minimum=size==='tight-copy'?0:Math.min(140,height);
-  for(let i=0;i<20&&content.scrollHeight>content.clientHeight&&height>minimum;i++){
-   height=Math.max(minimum,height-Math.max(4,content.scrollHeight-content.clientHeight));
-   photo.style.height=height+'px';
-  }
-  if(content.scrollHeight<=content.clientHeight)break;
- }
- stabKey=key;
+ photo.style.height='';
+ stabKey='mobile';
 }
 window.addEventListener('resize',()=>{clearTimeout(stabilizePhaseCard.t);stabilizePhaseCard.t=setTimeout(()=>stabilizePhaseCard(true),150);});
 window.matchMedia?.('(max-width: 860px)').addEventListener?.('change',()=>stabilizePhaseCard(true));

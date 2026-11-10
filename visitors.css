@@ -85,22 +85,22 @@ header{flex-wrap:wrap;gap:14px 24px}
 @media(max-width:860px){
  /* Audience pill: full width of the trainer block below, centred */
  .intro>.daily-audience{display:flex;justify-content:center;width:auto;margin:14px -4px 0;box-sizing:border-box}
- /* Stable viewport height avoids jumps when the phone browser chrome moves. */
- .workspace>.phase-popup{display:flex;flex:none;height:min(720px,calc(100svh - 24px));min-height:0;overflow:hidden;padding:12px}
- .phase-popup .phase-body{flex:1;min-height:0}
- .phase-popup .phase-content{display:flex;flex-direction:column;flex:1;min-height:0;overflow:visible}
- .phase-popup h2{font-size:22px;line-height:1.15;min-height:2.3em;margin:8px 0}
- .phase-popup .phase-photo{flex:0 0 auto;align-self:center;width:auto;max-width:100%;max-height:none;height:clamp(72px,30svh,250px);min-height:0;aspect-ratio:var(--photo-ratio,3/4);margin:0 0 10px;border-radius:8px;background:transparent}
+ /* Full-width photographs; the page can grow instead of shrinking the action. */
+ .workspace>.phase-popup{display:flex;flex:none;height:auto;min-height:0;overflow:visible;padding:12px}
+ .phase-popup .phase-body{flex:none;min-height:0}
+ .phase-popup .phase-content{display:block;flex:none;min-height:0;overflow:visible}
+ .phase-popup h2{font-size:21px;line-height:1.15;min-height:0;margin:6px 0 8px}
+ .phase-popup .phase-photo{flex:none;width:100%;max-width:none;max-height:none;height:auto;min-height:0;aspect-ratio:var(--photo-ratio,3/4);margin:0 0 8px;border-radius:8px;background:transparent}
  .phase-popup .phase-photo img{object-fit:contain;border-radius:inherit}
- .phase-popup .phase-content>p{flex:none;font-size:14px;line-height:1.45}
+ .phase-popup .phase-content>p{flex:none;font-size:14px;line-height:1.4}
  .phase-popup .phase-content.compact-copy>p{font-size:13px;line-height:1.4}
  .phase-popup .phase-content.tight-copy>p{font-size:12px;line-height:1.35}
  .phase-popup .player-explain{margin-top:8px!important;padding-top:8px}
  .phase-popup .player-explain:empty{display:none}
  .phase-popup .phase-nav button{min-height:40px;padding:8px}
  .phase-popup .all-phases-button{min-height:40px;padding:8px 10px;margin-top:8px}
- .phase-picker,.phase-picker .phase-buttons{flex:1;min-height:0}
- .phase-picker .phase-buttons{grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:repeat(7,minmax(0,1fr));gap:4px}
+ .phase-picker,.phase-picker .phase-buttons{flex:none;min-height:0}
+ .phase-picker .phase-buttons{grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:repeat(7,minmax(40px,auto));gap:4px}
  .phase-picker .phase-buttons button{font-size:12px;padding:4px;min-height:0}
 }
 
@@ -111,7 +111,7 @@ header{flex-wrap:wrap;gap:14px 24px}
  .transport .time-title{align-items:center;height:calc(2 * 1.2em);font-size:15px;margin-bottom:2px}
  .transport .time-title strong{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden;line-height:1.2;font-size:15px;max-height:2.4em}
  .transport .time-title span{font-size:15px}
- .phase-popup .phase-footer{padding-top:12px}
+ .phase-popup .phase-footer{padding-top:8px}
 }
 @media(max-width:860px){
  .transport{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;column-gap:12px;row-gap:8px}
