@@ -76,9 +76,10 @@ header{flex-wrap:wrap;gap:14px 24px}
  .phase-popup .phase-content.tight-copy>p{font-size:13px;line-height:1.4}
  /* A native desktop thumb can paint its focus halo as a square. */
  #timeline{-webkit-appearance:none;appearance:none;height:18px;background:transparent}
- #timeline::-webkit-slider-runnable-track{height:6px;border-radius:999px;background:#62666c}
+ #timeline::-webkit-slider-runnable-track{height:6px;border-radius:999px;background:linear-gradient(to right,#c9d1de 0 var(--progress,0%),#62666c var(--progress,0%) 100%)}
  #timeline::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:18px;height:18px;margin-top:-6px;border:0;border-radius:50%;background:#c9d1de;box-shadow:none}
  #timeline::-moz-range-track{height:6px;border-radius:999px;background:#62666c}
+ #timeline::-moz-range-progress{height:6px;border-radius:999px;background:#c9d1de}
  #timeline::-moz-range-thumb{width:18px;height:18px;border:0;border-radius:50%;background:#c9d1de;box-shadow:none}
 }
 @media(max-width:860px){
