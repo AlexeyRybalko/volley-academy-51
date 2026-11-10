@@ -28,3 +28,20 @@
  .phase-popup p{font-size:14px;line-height:1.5}
  .phase-popup .phase-footer{padding-top:12px;padding-bottom:14px}
 }
+/* Cards grow with their content. Only the page (or fullscreen workspace) scrolls. */
+.workspace .phase-popup{height:auto;min-height:0;max-height:none;align-self:start}
+.phase-popup .phase-body,.phase-popup .phase-content{flex:0 0 auto;min-height:0;overflow:visible}
+.phase-popup .phase-picker{flex:none;min-height:0}
+.phase-popup .phase-picker .phase-buttons{flex:none;grid-template-rows:none;grid-auto-rows:minmax(38px,auto)}
+@media(min-width:861px){
+ .workspace:not(:fullscreen){height:auto;min-height:max(600px,calc(100dvh - var(--workspace-top,210px) - 14px));grid-template-rows:auto;align-items:start;overflow:visible}
+ .workspace .board-panel{height:auto;overflow:visible}
+ .workspace .court-stage{flex:0 0 auto;align-items:start;overflow:visible}
+ .workspace .court-stage .court-wrap{position:sticky;top:12px;height:max(260px,calc(100dvh - var(--workspace-top,210px) - 250px));max-height:800px;align-self:start}
+ .workspace>.board-panel>.transport{position:sticky;bottom:0;z-index:6;background:var(--panel);box-shadow:0 -5px 15px #0001}
+ .workspace>aside{position:sticky;top:12px;height:max(360px,calc(100dvh - var(--workspace-top,210px) - 14px));max-height:calc(100dvh - 24px)}
+ .workspace:fullscreen{overflow:auto;align-items:start;grid-template-rows:auto}
+ .workspace:fullscreen .board-panel{height:auto;overflow:visible}
+ .workspace:fullscreen .court-stage .court-wrap{height:max(260px,calc(100dvh - 220px))}
+ .workspace:fullscreen>aside{height:calc(100dvh - 24px)}
+}
