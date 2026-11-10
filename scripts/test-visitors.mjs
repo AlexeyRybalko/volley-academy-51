@@ -4,6 +4,11 @@ import {webcrypto} from 'node:crypto';
 import assert from 'node:assert/strict';
 import test from 'node:test';
 const source=readFileSync(new URL('../visitors.js',import.meta.url),'utf8');
+test('Russian endings include 1–4, teens and compound numbers',()=>{
+ const word=vm.runInNewContext('('+source.match(/function word\(n\)\{[^}]+\}/)[0]+')');
+ for(const n of [1,2,3,4,21,22,24,101,102])assert.equal(word(n),'человека',String(n));
+ for(const n of [0,5,10,11,12,13,14,19,20,25,100,111,112,114])assert.equal(word(n),'человек',String(n));
+});
 const storage=()=>{const map=new Map();return {getItem:k=>map.get(k)||null,setItem:(k,v)=>map.set(k,v)};};
 async function start({store=storage(),day='2026-11-10',fail=false,rollover=false}={}){
  const nodes={dailyAudience:{hidden:true},dailyAudienceCount:{},dailyAudiencePeople:{}};
