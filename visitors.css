@@ -1,0 +1,7 @@
+.intro>.daily-audience{display:flex;align-items:center;gap:10px;flex:0 1 365px;max-width:390px;margin-left:24px;padding:10px 14px;border:1px solid #353b46;border-left:3px solid var(--red);border-radius:8px;background:#171b22;color:var(--muted);font-family:var(--text);font-size:14px;line-height:1.5;letter-spacing:0}
+.daily-audience[hidden]{display:none!important}
+.daily-audience svg{flex:none;opacity:.9}
+.daily-audience .audience-total{white-space:nowrap}
+.daily-audience strong{color:var(--gold);font-variant-numeric:tabular-nums;font-size:17px;font-weight:700}
+@media(max-width:1250px){.intro{flex-wrap:wrap;gap:12px}.intro>.daily-audience{flex-basis:auto;max-width:100%;margin-left:0}}
+@media(max-width:860px){.intro>.daily-audience{display:flex;width:100%;max-width:100%;margin:12px 0 0;padding:9px 11px;font-size:13px;gap:8px}.daily-audience strong{font-size:15px}.daily-audience svg{width:22px;height:22px}}
