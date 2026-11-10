@@ -57,3 +57,20 @@ header{flex-wrap:wrap;gap:14px 24px}
 .audience-lead{white-space:nowrap}
 @media(max-width:860px){.audience-total{font-size:30px}.join-button{font-size:17px;letter-spacing:.3px;padding:14px 16px;gap:8px}}
 @media(max-width:360px){.audience-total{font-size:26px}.audience-lead{font-size:12px}.join-button{font-size:15px}}
+
+/* ---------- Mobile fixes ---------- */
+/* Timeline: the scrubber area takes the finger; the input itself only serves the keyboard */
+#timeline{pointer-events:none}
+.scrubber{touch-action:pan-y;cursor:ew-resize;-webkit-user-select:none;user-select:none}
+.scrubber.scrubbing #timeline::-webkit-slider-thumb{transform:scale(1.18);box-shadow:0 0 0 8px #c4474d33,0 1px 5px #0008}
+.scrubber.scrubbing #timeline::-moz-range-thumb{transform:scale(1.18)}
+#timeline::-webkit-slider-thumb{transition:transform .12s,box-shadow .12s}
+@media(max-width:860px){
+ /* Audience pill: full width of the trainer block below, centred */
+ .intro>.daily-audience{display:flex;justify-content:center;width:auto;margin:14px -4px 0;box-sizing:border-box}
+ /* Phase card grows with its text: no inner scrolling on phones */
+ .workspace>.phase-popup{height:auto;min-height:0;overflow:visible}
+ .phase-popup .phase-body,.phase-popup .phase-content{flex:none;min-height:0;overflow:visible}
+ .phase-picker,.phase-picker .phase-buttons{flex:none}
+ .phase-picker .phase-buttons{grid-template-rows:none;grid-auto-rows:minmax(40px,auto)}
+}

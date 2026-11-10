@@ -614,6 +614,27 @@ function touchRipple(frame){
  const c=node('circle',{cx:x,cy:y,r:16,class:'touch-ripple'},layer);
  setTimeout(()=>c.remove(),900);
 }
+/* Timeline scrubbing: grab anywhere on the track (not only the thumb), smooth on touch screens.
+   The native range stays for keyboard use; pointer input is handled here and drawn once per frame. */
+(()=>{
+ const tl=$('timeline'),zone=tl&&tl.closest('.scrubber');if(!tl||!zone)return;
+ let dragging=null,raf=0,fallback=0,pending=null;
+ const valueAt=x=>{const r=tl.getBoundingClientRect(),thumb=26,min=+tl.min||0,max=+tl.max||rallyDuration;const k=Math.min(1,Math.max(0,(x-r.left-thumb/2)/Math.max(1,r.width-thumb)));return min+k*(max-min);};
+ // One redraw per frame; a timer backs the frame up so a hidden tab can never leave the scrubber stuck.
+ const apply=()=>{cancelAnimationFrame(raf);clearTimeout(fallback);raf=0;fallback=0;if(pending===null)return;const v=pending;pending=null;seek(v);};
+ const scrub=v=>{pending=v;tl.value=v;tl.style.setProperty('--progress',(100*v/(+tl.max||rallyDuration))+'%');if(!raf){raf=requestAnimationFrame(apply);fallback=setTimeout(apply,50);}};
+ zone.addEventListener('pointerdown',e=>{
+  const r=tl.getBoundingClientRect();
+  if(e.button>0||e.clientY<r.top-16||e.clientY>r.bottom+16)return;
+  e.preventDefault();pause();dragging=e.pointerId;
+  try{zone.setPointerCapture(e.pointerId);}catch(_){}
+  zone.classList.add('scrubbing');scrub(valueAt(e.clientX));
+ });
+ zone.addEventListener('pointermove',e=>{if(e.pointerId===dragging)scrub(valueAt(e.clientX));});
+ const end=e=>{if(e.pointerId!==dragging)return;dragging=null;zone.classList.remove('scrubbing');try{zone.releasePointerCapture(e.pointerId);}catch(_){}};
+ zone.addEventListener('pointerup',end);zone.addEventListener('pointercancel',end);
+ tl.oninput=e=>{pause();scrub(+e.target.value);};
+})();
 const linkTime=applyHash();
 if(linkTime===null&&window.matchMedia?.('(max-width: 700px)').matches)state.orientation='vertical';
 drawLayout();
