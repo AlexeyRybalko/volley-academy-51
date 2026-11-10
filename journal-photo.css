@@ -45,14 +45,9 @@
  .workspace:fullscreen .court-stage .court-wrap{height:max(260px,calc(100dvh - 220px))}
  .workspace:fullscreen>aside{height:calc(100dvh - 24px)}
 }
-/* Paging belongs to the trainer, not to a viewport-floating photo footer. */
+/* Navigation remains part of the rally card, bounded by its beige background. */
 #workspace.phase-navigation-ready{animation:none;transform:none;overflow-anchor:none}
-.phase-popup .phase-footer .all-phases-button{margin-top:0}
-.phase-step-toolbar{position:sticky;bottom:0;z-index:20;flex:none;box-sizing:border-box;padding:10px 16px calc(10px + env(safe-area-inset-bottom,0px));border-top:1px solid var(--line);background:var(--panel)}
-.phase-step-toolbar[hidden]{display:none!important}
-.phase-step-toolbar .phase-nav{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;width:min(100%,340px);margin:0}
-.phase-step-toolbar .phase-nav button{display:flex;align-items:center;justify-content:center;min-width:0;min-height:44px;padding:9px 12px;border:1px solid #9d9587;border-radius:7px;background:#f4f1ea;color:#292d34;font-family:var(--display);font-size:17px;font-weight:600;line-height:1;text-align:center;cursor:pointer}
-.phase-step-toolbar .phase-nav button:hover{background:#e7e0d3}
-.phase-step-toolbar .phase-nav button:disabled{opacity:.45;cursor:default}
-.phase-step-toolbar .phase-nav button:focus-visible{outline:3px solid var(--red);outline-offset:2px}
-@media(max-width:860px){.phase-step-toolbar{width:100%;padding:8px 12px calc(8px + env(safe-area-inset-bottom,0px))}.phase-step-toolbar .phase-nav{width:100%}.phase-step-toolbar .phase-nav button{font-size:16px}}
+.workspace .phase-popup{overflow:clip}
+.phase-popup .phase-body{flex:1 0 auto}
+.phase-popup .phase-footer{position:sticky;bottom:var(--pager-bottom,0px);z-index:3;margin-top:auto;background:#f4f1ea;border-radius:0 0 10px 10px}
+.phase-popup .phase-footer .all-phases-button{margin-top:8px}

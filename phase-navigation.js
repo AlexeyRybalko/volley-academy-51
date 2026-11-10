@@ -1,32 +1,30 @@
-/* Native, trainer-bounded paging. No fixed positioning or scroll-time geometry loop. */
+/* Preserve paging position while the controls stay inside their own card. */
 (()=>{
  'use strict';
  const workspace=document.getElementById('workspace'),popup=document.getElementById('phasePopup');
- const nav=popup?.querySelector('.phase-nav'),board=workspace?.querySelector('.board-panel');
- if(!workspace||!popup||!nav||!board)return;
+ const footer=popup?.querySelector('.phase-footer'),nav=footer?.querySelector('.phase-nav');
+ if(!workspace||!popup||!footer||!nav)return;
  workspace.classList.add('phase-navigation-ready');
- const toolbar=document.createElement('div');toolbar.className='phase-step-toolbar';
- toolbar.setAttribute('role','group');toolbar.setAttribute('aria-label','Переключение фаз розыгрыша');
- toolbar.setAttribute('aria-busy','false');toolbar.append(nav);
- const mobile=window.matchMedia('(max-width:860px)');
- function place(){(mobile.matches?workspace:board).append(toolbar);}
- function visibility(){toolbar.hidden=popup.hidden||popup.classList.contains('choosing-phase');}
- place();visibility();
- mobile.addEventListener('change',place);
- new MutationObserver(visibility).observe(popup,{attributes:true,attributeFilter:['hidden','class']});
- let frame;
+ let frame,lastWidth=window.innerWidth;
+ function clear(){popup.style.minHeight='';popup.style.removeProperty('--pager-bottom');}
+ window.addEventListener('resize',()=>{if(window.innerWidth!==lastWidth){lastWidth=window.innerWidth;clear();}});
+ new MutationObserver(()=>{if(popup.hidden||popup.classList.contains('choosing-phase'))clear();}).observe(popup,{attributes:true,attributeFilter:['hidden','class']});
  for(const button of nav.querySelectorAll('button'))button.addEventListener('click',()=>{
   if(button.disabled)return;
   const before=button.getBoundingClientRect().top;
-  toolbar.setAttribute('aria-busy','true');cancelAnimationFrame(frame);
+  popup.style.setProperty('--pager-bottom',Math.max(0,window.innerHeight-footer.getBoundingClientRect().bottom)+'px');
+  popup.style.minHeight='';nav.setAttribute('aria-busy','true');cancelAnimationFrame(frame);
   frame=requestAnimationFrame(()=>{
-   // Keep the pressed control under the pointer after the current photo/text change.
-   const delta=button.getBoundingClientRect().top-before;
-   if(Math.abs(delta)>.5){
-    const scroller=document.fullscreenElement===workspace?workspace:window;
-    scroller.scrollBy({top:delta,left:0,behavior:'instant'});
+   let delta=button.getBoundingClientRect().top-before;
+   const fullscreen=document.fullscreenElement===workspace;
+   const offset=fullscreen?workspace.scrollTop:window.scrollY;
+   // At the top of the page there is no upward scroll room: retain just the needed space.
+   if(delta<0&&offset+delta<0){
+    popup.style.minHeight=Math.ceil(popup.offsetHeight-delta-offset)+'px';
+    delta=button.getBoundingClientRect().top-before;
    }
-   toolbar.setAttribute('aria-busy','false');
+   if(Math.abs(delta)>.5)(fullscreen?workspace:window).scrollBy({top:delta,left:0,behavior:'instant'});
+   nav.setAttribute('aria-busy','false');
   });
  },{capture:true});
 })();
