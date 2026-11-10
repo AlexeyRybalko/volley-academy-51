@@ -25,3 +25,5 @@ window.academyServePhotos = {
   'Возврат в защиту': {...window.academyPhotos.ready, alt:'Команда возвращается на позиции в защите'},
   'Атака соперника': {...window.academyPhotos.counterattack, alt:'Соперник атакует в прыжке'},
 };
+
+window.academyServePhotos['Перед своей подачей'] = window.academyServePhotos['Сбор у сетки'];
