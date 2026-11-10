@@ -551,8 +551,7 @@ function showPhasePhoto(title,nextTitle){
  if(!file){setPhotoState('error');return;}
  const src='photos/'+file,cap=$('phasePhotoCredit');
  img.style.objectPosition=entry.position||'50% 50%';img.alt=entry.alt||title;
- const focusY=parseFloat((entry.position||'50% 50%').split(' ')[1]);
- fig.style.setProperty('--journal-focus',Math.min(45,Number.isFinite(focusY)?focusY:45)+'%');
+ fig.style.setProperty('--photo-ratio',entry.width&&entry.height?entry.width+'/'+entry.height:'4/5');
  if(cap)cap.hidden=!entry.credit;
  if(cap){cap.replaceChildren();if(entry.credit){const l=document.createElement(entry.source?'a':'span');l.textContent='Фото: '+entry.credit;if(entry.source){l.href=entry.source;l.target='_blank';l.rel='noreferrer';}cap.append(l);}}
  img.title=entry&&entry.credit?'Фото: '+entry.credit:'';
