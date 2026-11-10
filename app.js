@@ -1,4 +1,7 @@
 'use strict';
+/* Reload always starts at the top of the page (links to sections like #rules still work). */
+if('scrollRestoration' in history)history.scrollRestoration='manual';
+(()=>{const anchor=/^#[A-Za-z][\w-]*$/.test(location.hash)&&document.getElementById(location.hash.slice(1));if(!anchor){window.scrollTo(0,0);window.addEventListener('load',()=>window.scrollTo(0,0),{once:true});}})();
 const $=id=>document.getElementById(id), NS='http://www.w3.org/2000/svg';
 const roles={s:{short:'С',name:'Связующий',color:'#d8a84e',start:1},o:{short:'Д',name:'Диагональный',color:'#c97b62',start:4},h1:{short:'Д1',name:'Доигровщик 1',color:'#5fa58c',start:2},h2:{short:'Д2',name:'Доигровщик 2',color:'#5fa58c',start:5},m1:{short:'Ц1',name:'Центральный 1',color:'#9a8bc9',start:3},m2:{short:'Ц2',name:'Центральный 2',color:'#9a8bc9',start:6},l:{short:'Л',name:'Либеро',color:'#ece6d8',start:0}};
 const darkText=new Set(['l','s']);
