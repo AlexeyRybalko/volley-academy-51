@@ -1,36 +1,32 @@
-/* Keep phase navigation under the pointer without fixing the card's content height. */
+/* Native, trainer-bounded paging. No fixed positioning or scroll-time geometry loop. */
 (()=>{
  'use strict';
- const popup=document.getElementById('phasePopup'),footer=popup?.querySelector('.phase-footer');
- if(!popup||!footer)return;
- document.getElementById('workspace')?.classList.add('phase-navigation-ready');
- const slot=document.createElement('div');slot.className='phase-footer-slot';
- footer.before(slot);slot.append(footer);
- let scheduled=false;
+ const workspace=document.getElementById('workspace'),popup=document.getElementById('phasePopup');
+ const nav=popup?.querySelector('.phase-nav'),board=workspace?.querySelector('.board-panel');
+ if(!workspace||!popup||!nav||!board)return;
+ workspace.classList.add('phase-navigation-ready');
+ const toolbar=document.createElement('div');toolbar.className='phase-step-toolbar';
+ toolbar.setAttribute('role','group');toolbar.setAttribute('aria-label','Переключение фаз розыгрыша');
+ toolbar.setAttribute('aria-busy','false');toolbar.append(nav);
  const mobile=window.matchMedia('(max-width:860px)');
- function update(){
-  scheduled=false;
-  const rect=popup.getBoundingClientRect();
-  const dock=!popup.hidden&&popup.getAttribute('aria-busy')!=='true'&&!popup.classList.contains('choosing-phase')&&rect.width>0&&rect.bottom>140&&rect.top<window.innerHeight-180;
-  if(dock){
-   const transport=document.querySelector('.transport');
-   const bottom=mobile.matches?12:(transport?.offsetHeight||100)+16;
-   popup.style.setProperty('--phase-nav-left',rect.left+'px');
-   popup.style.setProperty('--phase-nav-width',rect.width+'px');
-   popup.style.setProperty('--phase-nav-bottom',bottom+'px');
-   const height=footer.offsetHeight;
-   if(slot.style.height!==height+'px')slot.style.height=height+'px';
-   if(!popup.classList.contains('nav-docked'))popup.classList.add('nav-docked');
-  }else{
-   if(popup.classList.contains('nav-docked'))popup.classList.remove('nav-docked');slot.style.height='';
-  }
- }
- function schedule(){if(!scheduled){scheduled=true;requestAnimationFrame(update);}}
- window.addEventListener('scroll',schedule,{passive:true});
- window.addEventListener('resize',schedule);
- window.visualViewport?.addEventListener('resize',schedule);
- new ResizeObserver(schedule).observe(popup);
- new ResizeObserver(schedule).observe(footer);
- new MutationObserver(schedule).observe(popup,{attributes:true,attributeFilter:['class','hidden','aria-busy']});
- schedule();
+ function place(){(mobile.matches?workspace:board).append(toolbar);}
+ function visibility(){toolbar.hidden=popup.hidden||popup.classList.contains('choosing-phase');}
+ place();visibility();
+ mobile.addEventListener('change',place);
+ new MutationObserver(visibility).observe(popup,{attributes:true,attributeFilter:['hidden','class']});
+ let frame;
+ for(const button of nav.querySelectorAll('button'))button.addEventListener('click',()=>{
+  if(button.disabled)return;
+  const before=button.getBoundingClientRect().top;
+  toolbar.setAttribute('aria-busy','true');cancelAnimationFrame(frame);
+  frame=requestAnimationFrame(()=>{
+   // Keep the pressed control under the pointer after the current photo/text change.
+   const delta=button.getBoundingClientRect().top-before;
+   if(Math.abs(delta)>.5){
+    const scroller=document.fullscreenElement===workspace?workspace:window;
+    scroller.scrollBy({top:delta,left:0,behavior:'instant'});
+   }
+   toolbar.setAttribute('aria-busy','false');
+  });
+ },{capture:true});
 })();
