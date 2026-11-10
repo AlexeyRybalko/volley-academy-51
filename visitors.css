@@ -62,9 +62,23 @@ header{flex-wrap:wrap;gap:14px 24px}
 /* Timeline: the scrubber area takes the finger; the input itself only serves the keyboard */
 #timeline{pointer-events:none}
 .scrubber{touch-action:pan-y;cursor:ew-resize;-webkit-user-select:none;user-select:none}
-.scrubber.scrubbing #timeline::-webkit-slider-thumb{transform:scale(1.18);box-shadow:0 0 0 8px #c4474d33,0 1px 5px #0008}
 .scrubber.scrubbing #timeline::-moz-range-thumb{transform:scale(1.18)}
+@media(max-width:860px){
+ .scrubber.scrubbing #timeline::-webkit-slider-thumb{transform:scale(1.18);box-shadow:0 0 0 8px #c4474d33,0 1px 5px #0008}
+}
 #timeline::-webkit-slider-thumb{transition:transform .12s,box-shadow .12s}
+@media(min-width:861px){
+ /* Shrink only the photograph when an explanation needs more room. */
+ .phase-popup .phase-content{display:flex;flex-direction:column;overflow:visible}
+ .phase-popup .phase-photo{float:none;flex:0 1 auto;min-height:0;width:100%;margin:0 0 14px;border-radius:8px}
+ .phase-popup .phase-content>p{flex:none}
+ /* A native desktop thumb can paint its focus halo as a square. */
+ #timeline{-webkit-appearance:none;appearance:none;height:18px;background:transparent}
+ #timeline::-webkit-slider-runnable-track{height:6px;border-radius:999px;background:#62666c}
+ #timeline::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:18px;height:18px;margin-top:-6px;border:0;border-radius:50%;background:#c9d1de;box-shadow:none}
+ #timeline::-moz-range-track{height:6px;border-radius:999px;background:#62666c}
+ #timeline::-moz-range-thumb{width:18px;height:18px;border:0;border-radius:50%;background:#c9d1de;box-shadow:none}
+}
 @media(max-width:860px){
  /* Audience pill: full width of the trainer block below, centred */
  .intro>.daily-audience{display:flex;justify-content:center;width:auto;margin:14px -4px 0;box-sizing:border-box}
