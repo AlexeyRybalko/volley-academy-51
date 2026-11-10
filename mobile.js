@@ -7,8 +7,12 @@
  const transport=document.querySelector('.transport');
  const popupToggle=document.getElementById('togglePopup');
  const coach=document.querySelector('.coach-panel');
+ const rotations=document.getElementById('rotations');
+ const rotationHeading=rotations.previousElementSibling;
+ const rotationPicker=document.createElement('div');rotationPicker.className='mobile-rotation-picker';
+ rotations.before(rotationPicker);rotationPicker.append(rotationHeading,rotations);
  if(!workspace||!popup||!roster||!transport)return;
- const originals=[popup,roster,transport,popupToggle].map(element=>{
+ const originals=[popup,roster,transport,popupToggle,rotationPicker].map(element=>{
  const anchor=document.createComment('desktop position: '+(element.id||element.className));
  element.parentNode.insertBefore(anchor,element);return{element,anchor};
  });
@@ -24,6 +28,7 @@
  function apply(){
  if(mobile.matches){
  transport.parentNode.insertBefore(transport,roster);
+ transport.before(rotationPicker);
  workspace.append(popup);
  coach.after(popupToggle);
  if(savedOrientation===null)savedOrientation=state.orientation;

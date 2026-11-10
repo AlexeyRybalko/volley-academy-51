@@ -29,6 +29,10 @@
  #court,.court-wrap #court,.vertical-court #court{display:block;width:100%;height:auto;min-width:0;max-width:100%;max-height:none;aspect-ratio:820/860}
  .court-meta,.vertical-court .court-meta{display:flex;flex-wrap:wrap;min-width:0;width:100%;padding:5px 8px 9px;gap:3px;font-size:10px;line-height:1.4}
  .court-meta>span{flex-basis:100%;max-width:100%;white-space:normal;overflow-wrap:anywhere}
+ .court-meta #courtLegend,.court-meta #rowInfo{display:none}
+ .court-meta,.vertical-court .court-meta{display:none}
+ .court-meta:has(.cone-legend:not([hidden])){display:flex}
+ .mobile-rotation-picker{padding:12px 14px 16px;border-top:1px solid var(--line)}
  .cone-legend{font-size:10px}
  .transport{display:grid;grid-template-columns:48px 76px 44px 44px;justify-content:center;align-items:center;gap:8px 12px;position:static;width:100%;min-width:0;padding:12px 20px 15px}
  .transport .scrubber{display:block;grid-column:1/-1;grid-row:1;order:0;width:100%;min-width:0;padding:0 10px;flex:none}
