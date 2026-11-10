@@ -356,7 +356,7 @@ function render(){
  for(const chapter of $('timelineLabels').children)chapter.classList.toggle('current',state.auto&&Number(chapter.dataset.chapter)===Math.min(5,Math.floor(state.cycleTime/40)));
  const phaseKey=state.rotation+':'+state.mode+':'+index;
  if(phaseKey!==lastPhaseKey){touchRipple(a);
- lastPhaseKey=phaseKey;$('phaseContent').scrollTop=0;showPhasePhoto(a.title,frames[index+1]?.title);pinPhasePhoto(index);
+ lastPhaseKey=phaseKey;$('phaseContent').scrollTop=0;showPhasePhoto(a.title,frames[index+1]?.title);
  animatePhaseCard();
  }
  $('previousPhase').disabled=!state.auto&&state.time===0;
@@ -479,7 +479,7 @@ async function animatePhaseView(elements,enter){
 async function setPhasePicker(open,onReveal){
  if(phasePickerBusy)return;
  phasePickerBusy=true;
- const popup=$('phasePopup'),picker=$('phasePicker'),card=[popup.querySelector('.explanation-heading'),popup.querySelector('.phase-body')];
+ const popup=$('phasePopup'),picker=$('phasePicker'),card=[popup.querySelector('.phase-body')];
  popup.setAttribute('aria-busy','true');
  try{
   await animatePhaseView(open?card:[picker],false);
