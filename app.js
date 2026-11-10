@@ -252,6 +252,10 @@ function applyDirectionalDefense(){
  }
 }
 function updateControls(){
+ if(window.matchMedia?.('(max-width: 860px)').matches){
+  state.rosterTeam='home';
+  if(state.selectedTeam==='away'){state.selectedTeam='home';state.selected=null;state.solo=false;$('solo').checked=false;hoverPlayer=null;}
+ }
  $('receive').classList.toggle('active',state.mode==='receive');$('serve').classList.toggle('active',state.mode==='serve');
  $('receive').setAttribute('aria-pressed',state.mode==='receive');$('serve').setAttribute('aria-pressed',state.mode==='serve');
  $('rotations').replaceChildren();for(let r=0;r<6;r++){const b=document.createElement('button');b.textContent=r+1;b.className=r===state.rotation?'active':'';b.setAttribute('aria-label','Расстановка '+(r+1));b.setAttribute('aria-pressed',r===state.rotation);b.onclick=()=>{if(state.auto){const chapter=(r-cycleStart.rotation+6)%6;seek(chapter*40+(state.mode==='receive'?20:0));}else{state.rotation=r;restart();}};$('rotations').append(b);}

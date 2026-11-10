@@ -18,6 +18,7 @@
  transport.parentNode.insertBefore(transport,roster);
  workspace.append(popup);
  if(savedOrientation===null)savedOrientation=state.orientation;
+ if(state.rosterTeam!=='home'||state.selectedTeam==='away'){updateControls();render();}
  if(state.orientation!=='vertical'){state.orientation='vertical';drawLayout();render();}
  }else{
  for(const {element,anchor}of originals)anchor.parentNode.insertBefore(element,anchor.nextSibling);

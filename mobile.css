@@ -47,7 +47,7 @@
  .transport #reset{grid-column:3;width:44px;height:44px;padding:0;font-size:28px;display:grid;place-items:center}
  .transport .share-button{grid-column:4;width:44px;height:44px;padding:0}
  .roster-bar{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:9px 10px;min-width:0;width:100%;padding:12px 14px;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
- .roster-bar .team-picker{grid-column:1/-1;justify-self:center;margin:0;min-width:0}.roster-bar .team-picker button{min-height:34px;font-size:13px;padding:7px 18px}
+ .roster-bar .team-picker{display:none}
  .roster-bar .roster,.workspace .roster-bar .roster{grid-column:1/-1;display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:3px;width:100%;min-width:0;overflow:visible;flex:none}
  .roster-bar .roster button{width:100%;min-width:0;min-height:42px;display:flex;justify-content:center;align-items:center;flex:none;font-size:0;padding:3px;gap:0;touch-action:manipulation}
  .roster-bar .roster button>span:not(.role-swatch){display:none}.roster-bar .role-swatch{width:29px;height:29px;flex:0 0 29px;font-size:12px}
