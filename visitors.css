@@ -90,7 +90,8 @@ header{flex-wrap:wrap;gap:14px 24px}
  .phase-popup .phase-body{flex:1;min-height:0}
  .phase-popup .phase-content{display:flex;flex-direction:column;flex:1;min-height:0;overflow:visible}
  .phase-popup h2{font-size:22px;line-height:1.15;min-height:2.3em;margin:8px 0}
- .phase-popup .phase-photo{flex:0 0 auto;width:100%;max-width:none;max-height:none;height:clamp(72px,30svh,250px);min-height:0;aspect-ratio:auto;margin:0 0 10px;border-radius:8px}
+ .phase-popup .phase-photo{flex:0 0 auto;align-self:center;width:auto;max-width:100%;max-height:none;height:clamp(72px,30svh,250px);min-height:0;aspect-ratio:var(--photo-ratio,3/4);margin:0 0 10px;border-radius:8px;background:transparent}
+ .phase-popup .phase-photo img{object-fit:contain;border-radius:inherit}
  .phase-popup .phase-content>p{flex:none;font-size:14px;line-height:1.45}
  .phase-popup .phase-content.compact-copy>p{font-size:13px;line-height:1.4}
  .phase-popup .phase-content.tight-copy>p{font-size:12px;line-height:1.35}
