@@ -376,8 +376,7 @@ function playerInfoFor(a,t=state.time){
  return info;
 }
 
-/* Phones: the phase card keeps one height for the whole rally (the tallest phase),
-   so "Назад" and "Дальше" never jump under the finger and nothing scrolls inside. */
+/* Keep navigation in place; fit the photo into the space left by the explanation. */
 let stabKey='';
 let desktopFitKey='';
 function stabilizePhaseCard(force){
@@ -405,22 +404,22 @@ function stabilizePhaseCard(force){
   }
   desktopFitKey=key;return;
  }
- desktopFitKey='';$('phasePhoto').style.height='';content.classList.remove('compact-copy','tight-copy');
+ desktopFitKey='';
  if(popup.hidden||popup.classList.contains('choosing-phase')||!content.clientWidth)return;
- const key=[state.rotation,state.mode,state.auto,state.selected,state.selectedTeam,state.orientation,state.quality,state.attack,state.opponentAttack,state.opponentRotation,state.firstBall,state.opponentFirstBall,state.serveGroup,content.clientWidth,frames.length].join('|');
+ const key=[content.clientWidth,content.clientHeight,$('explainTitle').textContent,$('explainText').innerHTML,$('playerText').innerHTML].join('|');
  if(key===stabKey&&!force)return;
- const title=$('explainTitle'),text=$('explainText'),player=$('playerText');
- const saved=[title.textContent,text.innerHTML,player.innerHTML];
  content.style.minHeight='';if(heading)heading.style.minHeight='';
- let maxContent=0,maxHeading=0;
- for(const f of frames){
-  title.textContent=window.volleyTypography?window.volleyTypography(f.title):f.title;
-  setRoleText(text,f.explain);setRoleText(player,playerInfoFor(f,f.t));
-  maxContent=Math.max(maxContent,content.scrollHeight);
-  if(heading)maxHeading=Math.max(maxHeading,heading.offsetHeight);
+ const photo=$('phasePhoto');content.classList.remove('compact-copy','tight-copy');
+ for(const size of ['', 'compact-copy','tight-copy']){
+  if(size)content.classList.add(size);
+  photo.style.height='';let height=photo.getBoundingClientRect().height;
+  const minimum=size==='tight-copy'?0:Math.min(72,height);
+  for(let i=0;i<20&&content.scrollHeight>content.clientHeight&&height>minimum;i++){
+   height=Math.max(minimum,height-Math.max(4,content.scrollHeight-content.clientHeight));
+   photo.style.height=height+'px';
+  }
+  if(content.scrollHeight<=content.clientHeight)break;
  }
- title.textContent=saved[0];text.innerHTML=saved[1];player.innerHTML=saved[2];
- content.style.minHeight=maxContent+'px';if(heading)heading.style.minHeight=maxHeading+'px';
  stabKey=key;
 }
 window.addEventListener('resize',()=>{clearTimeout(stabilizePhaseCard.t);stabilizePhaseCard.t=setTimeout(()=>stabilizePhaseCard(true),150);});
