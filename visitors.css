@@ -74,3 +74,17 @@ header{flex-wrap:wrap;gap:14px 24px}
  .phase-picker,.phase-picker .phase-buttons{flex:none}
  .phase-picker .phase-buttons{grid-template-rows:none;grid-auto-rows:minmax(40px,auto)}
 }
+
+/* Phones: wider timeline and a phase title of fixed height (max two lines) */
+@media(max-width:860px){
+ .transport{padding-left:8px;padding-right:8px}
+ .transport .scrubber{padding-left:6px;padding-right:6px}
+ .transport .time-title{align-items:center;height:calc(2 * 1.2em);font-size:15px;margin-bottom:2px}
+ .transport .time-title strong{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden;line-height:1.2;font-size:15px;max-height:2.4em}
+ .transport .time-title span{font-size:15px}
+ .phase-popup .phase-footer{padding-top:12px}
+}
+@media(max-width:860px){
+ .transport{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;column-gap:12px;row-gap:8px}
+ .transport .scrubber{order:-1;flex:0 0 100%;width:100%;box-sizing:border-box}
+}

@@ -347,10 +347,7 @@ function render(){
  }
  const bp=interpolate(a.b,b.b,u),[bx,by]=xy(bp);node('ellipse',{cx:bx+3,cy:by+16,rx:13,ry:5,fill:'#0b1220',opacity:.35},$('ball'));node('circle',{cx:bx,cy:by,r:21,class:'ball-halo'},$('ball'));node('use',{href:'#vball',x:bx-16,y:by-16,width:32,height:32,class:'ball-icon'},$('ball'));
  $('timeline').value=state.auto?state.cycleTime:state.time;$('timeline').style.setProperty?.('--progress',(100*Number($('timeline').value)/Number($('timeline').max||20))+'%');$('timeLabel').textContent=formatTime(state.auto?state.cycleTime:state.time)+' / '+formatTime(state.auto?cycleDuration:rallyDuration);$('phaseTitle').textContent=window.volleyTypography((state.auto?'Р'+(state.rotation+1)+' · ':'')+a.title);$('explainTitle').textContent=window.volleyTypography(a.title);setRoleText($('explainText'),a.explain);
- let info='';if(state.selected){const id=state.selected,r=roles[id],tm=state.selectedTeam==='away'?opponent:model,prefix=state.selectedTeam==='away'?'Соперник · ':'Наша команда · ';if(!tm.ids.includes(id))info=prefix+r.name+': вне площадки. '+(id==='l'?'Центральный сейчас подаёт сам, либеро выйдет вместо него на следующем приёме.':'На задней линии вместо него играет либеро.');else info=prefix+r.name+' · зона '+tm.zones[id]+' · '+(front(tm.zones[id])?'передняя':'задняя')+' линия. '+(id==='s'?'Выходит на вторую передачу.':id==='l'?'Приём, защита и страховка.':id===tm.attacker?'Завершает атаку этой команды.':front(tm.zones[id])?'Атака, блок и страховка.':'Приём, защита и страховка.');}
- const selectedJob=(!a.cone||state.time<=a.cone.end+1e-8)?(state.selectedTeam==='home'?a.homeJobs:a.awayJobs)?.[state.selected]:null;
- if(selectedJob)info+=' Задача в защите: '+selectedJob.toLowerCase()+'.';
- if(state.orientation==='vertical'&&state.selectedTeam==='away'&&state.selected)info+=' Чтобы увидеть этого игрока, переключись на горизонтальный вид: сейчас показана только наша половина.';
+ let info=playerInfoFor(a);
  setRoleText($('playerText'),info);
  $('phaseCount').textContent=(index+1)+' / '+frames.length;
  for(const chapter of $('timelineLabels').children)chapter.classList.toggle('current',state.auto&&Number(chapter.dataset.chapter)===Math.min(5,Math.floor(state.cycleTime/40)));
@@ -362,7 +359,43 @@ function render(){
  $('previousPhase').disabled=!state.auto&&state.time===0;
  $('nextPhase').disabled=!state.auto&&state.time>=20;
  document.querySelectorAll('#phaseButtons button').forEach(n=>{const active=Number(n.dataset.t)===a.t;n.classList.toggle('active',active);n.setAttribute('aria-current',active?'step':'false');});
+ stabilizePhaseCard();
 }
+function playerInfoFor(a,t=state.time){
+ let info='';if(state.selected){const id=state.selected,r=roles[id],tm=state.selectedTeam==='away'?opponent:model,prefix=state.selectedTeam==='away'?'Соперник · ':'Наша команда · ';if(!tm.ids.includes(id))info=prefix+r.name+': вне площадки. '+(id==='l'?'Центральный сейчас подаёт сам, либеро выйдет вместо него на следующем приёме.':'На задней линии вместо него играет либеро.');else info=prefix+r.name+' · зона '+tm.zones[id]+' · '+(front(tm.zones[id])?'передняя':'задняя')+' линия. '+(id==='s'?'Выходит на вторую передачу.':id==='l'?'Приём, защита и страховка.':id===tm.attacker?'Завершает атаку этой команды.':front(tm.zones[id])?'Атака, блок и страховка.':'Приём, защита и страховка.');}
+ const selectedJob=(!a.cone||t<=a.cone.end+1e-8)?(state.selectedTeam==='home'?a.homeJobs:a.awayJobs)?.[state.selected]:null;
+ if(selectedJob)info+=' Задача в защите: '+selectedJob.toLowerCase()+'.';
+ if(state.orientation==='vertical'&&state.selectedTeam==='away'&&state.selected)info+=' Чтобы увидеть этого игрока, переключись на горизонтальный вид: сейчас показана только наша половина.';
+ return info;
+}
+
+/* Phones: the phase card keeps one height for the whole rally (the tallest phase),
+   so "Назад" and "Дальше" never jump under the finger and nothing scrolls inside. */
+let stabKey='';
+function stabilizePhaseCard(force){
+ const popup=$('phasePopup'),content=$('phaseContent'),heading=popup&&popup.querySelector('.explanation-heading');
+ if(!content||!frames||!frames.length)return;
+ const mobile=window.matchMedia('(max-width: 860px)').matches;
+ if(!mobile){if(stabKey){content.style.minHeight='';if(heading)heading.style.minHeight='';stabKey='';}return;}
+ if(popup.hidden||popup.classList.contains('choosing-phase')||!content.clientWidth)return;
+ const key=[state.rotation,state.mode,state.auto,state.selected,state.selectedTeam,state.orientation,state.quality,state.attack,state.opponentAttack,state.opponentRotation,state.firstBall,state.opponentFirstBall,state.serveGroup,content.clientWidth,frames.length].join('|');
+ if(key===stabKey&&!force)return;
+ const title=$('explainTitle'),text=$('explainText'),player=$('playerText');
+ const saved=[title.textContent,text.innerHTML,player.innerHTML];
+ content.style.minHeight='';if(heading)heading.style.minHeight='';
+ let maxContent=0,maxHeading=0;
+ for(const f of frames){
+  title.textContent=window.volleyTypography?window.volleyTypography(f.title):f.title;
+  setRoleText(text,f.explain);setRoleText(player,playerInfoFor(f,f.t));
+  maxContent=Math.max(maxContent,content.scrollHeight);
+  if(heading)maxHeading=Math.max(maxHeading,heading.offsetHeight);
+ }
+ title.textContent=saved[0];text.innerHTML=saved[1];player.innerHTML=saved[2];
+ content.style.minHeight=maxContent+'px';if(heading)heading.style.minHeight=maxHeading+'px';
+ stabKey=key;
+}
+window.addEventListener('resize',()=>{clearTimeout(stabilizePhaseCard.t);stabilizePhaseCard.t=setTimeout(()=>stabilizePhaseCard(true),150);});
+window.matchMedia?.('(max-width: 860px)').addEventListener?.('change',()=>stabilizePhaseCard(true));
 function tick(now){if(!last)last=now;const dt=Math.min((now-last)/1000,.1);last=now;if(state.playing){if(state.auto)seek((state.cycleTime+dt*state.speed)%cycleDuration);else{state.time=Math.min(rallyDuration,state.time+dt*state.speed);if(state.time>=rallyDuration)pause();render();}}else if(blend||hoverPlayer)render();requestAnimationFrame(tick);}
 $('play').onclick=toggle;$('reset').onclick=()=>{pause();seek(0);};$('timeline').oninput=e=>{pause();seek(+e.target.value);};$('speed').onchange=e=>state.speed=+e.target.value;
 for(const mode of ['receive','serve'])$(mode).onclick=()=>{if(state.auto)seek(Math.min(5,Math.floor(state.cycleTime/40))*40+(mode==='receive'?20:0));else{state.mode=mode;restart();}};
