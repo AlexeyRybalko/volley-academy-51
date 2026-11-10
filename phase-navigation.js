@@ -12,7 +12,6 @@
  for(const button of nav.querySelectorAll('button'))button.addEventListener('click',()=>{
   if(button.disabled)return;
   const before=button.getBoundingClientRect().top;
-  popup.style.setProperty('--pager-bottom',Math.max(0,window.innerHeight-footer.getBoundingClientRect().bottom)+'px');
   popup.style.minHeight='';nav.setAttribute('aria-busy','true');cancelAnimationFrame(frame);
   frame=requestAnimationFrame(()=>{
    let delta=button.getBoundingClientRect().top-before;

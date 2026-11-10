@@ -49,5 +49,5 @@
 #workspace.phase-navigation-ready{animation:none;transform:none;overflow-anchor:none}
 .workspace .phase-popup{overflow:clip}
 .phase-popup .phase-body{flex:1 0 auto}
-.phase-popup .phase-footer{position:sticky;bottom:var(--pager-bottom,0px);z-index:3;margin-top:auto;background:#f4f1ea;border-radius:0 0 10px 10px}
+.phase-popup .phase-footer{position:relative;bottom:auto;z-index:auto;margin-top:auto;background:#f4f1ea;border-radius:0 0 10px 10px}
 .phase-popup .phase-footer .all-phases-button{margin-top:8px}
